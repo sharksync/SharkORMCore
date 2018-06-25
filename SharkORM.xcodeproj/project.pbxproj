@@ -771,6 +771,7 @@
 				DEFINES_MODULE = YES;
 				EXECUTABLE_PREFIX = "";
 				MODULEMAP_FILE = "${SRCROOT}/SharkORM/SharkORM.modulemap";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_MODULE_NAME = SharkORM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -778,6 +779,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/SharkORM/Core/BridgingHeader.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
 			};
 			name = Debug;
 		};
@@ -788,6 +790,7 @@
 				DEFINES_MODULE = YES;
 				EXECUTABLE_PREFIX = "";
 				MODULEMAP_FILE = "${SRCROOT}/SharkORM/SharkORM.modulemap";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_MODULE_NAME = SharkORM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -795,6 +798,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/SharkORM/Core/BridgingHeader.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
 			};
 			name = Release;
 		};
