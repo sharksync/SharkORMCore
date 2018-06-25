@@ -27,7 +27,7 @@
 #import "SRKEntity+Private.h"
 #import "SRKEntityChain.h"
 #import "SRKSyncRegisteredClass.h"
-#import "SharkORMCore-Swift.h"
+#import "SharkORM-Swift.h"
 
 typedef enum : NSUInteger {
     SharkSyncOperationCreate = 1,     // a new object has been created

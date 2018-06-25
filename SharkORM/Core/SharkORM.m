@@ -35,7 +35,7 @@
 #import "FTSRegistry.h"
 #import "SRKGlobals.h"
 #import "SRKTransaction+Private.h"
-#import "SharkORMCore-Swift.h"
+#import "SharkORM-Swift.h"
 
 #define EventInsert 1
 #define EventUpdate 2

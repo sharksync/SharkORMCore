@@ -26,7 +26,7 @@
 #import "SRKEntity+Private.h"
 #import "SharkORM+Private.h"
 #import "SRKGlobals.h"
-#import "SharkORMCore-Swift.h"
+#import "SharkORM-Swift.h"
 
 @implementation SRKUtilities
 

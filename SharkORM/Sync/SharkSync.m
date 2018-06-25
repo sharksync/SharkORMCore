@@ -26,7 +26,7 @@
 #import "SRKSyncOptions.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "SRKAES256Extension.h"
-#import "SharkORMCore-Swift.h"
+#import "SharkORM-Swift.h"
 #import "SRKSyncRegisteredClass.h"
 
 #ifdef TARGET_OS_IPHONE

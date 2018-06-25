@@ -39,7 +39,7 @@
 #import "SRKGlobals.h"
 #import "SRKTransaction+Private.h"
 #import "SRKCommitOptions+Private.h"
-#import "SharkORMCore-Swift.h"
+#import "SharkORM-Swift.h"
 
 @interface SRKEntity()
 

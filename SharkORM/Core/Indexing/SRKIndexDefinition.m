@@ -27,7 +27,7 @@
 #import "SRKIndexDefinition+Private.h"
 #import "SharkORM+Private.h"
 #import "SRKCompoundIndex+Private.h"
-#import "SharkORMCore-Swift.h"
+#import "SharkORM-Swift.h"
 
 @implementation SRKIndexDefinition
 

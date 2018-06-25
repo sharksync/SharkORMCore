@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A499B0A20E14CE000086B7D /* SharkORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A499B0920E14CE000086B7D /* SharkORMTests.m */; };
 		3A71E62520DCF87D00554A4F /* SchemaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B720DCF87C00554A4F /* SchemaManager.m */; };
 		3A71E62620DCF87D00554A4F /* SharkORM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B820DCF87C00554A4F /* SharkORM.m */; };
 		3A71E62720DCF87D00554A4F /* SRKLazyLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B920DCF87C00554A4F /* SRKLazyLoader.m */; };
@@ -78,7 +79,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A71E50020DCF65800554A4F /* libSharkORMCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSharkORMCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A2175A920E180890063B0B1 /* SharkORM.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = SharkORM.modulemap; sourceTree = "<group>"; };
+		3A499AFE20E14CE000086B7D /* SharkORM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharkORM.h; sourceTree = "<group>"; };
+		3A499AFF20E14CE000086B7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A499B0420E14CE000086B7D /* SharkORMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharkORMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A499B0920E14CE000086B7D /* SharkORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SharkORMTests.m; sourceTree = "<group>"; };
+		3A499B0B20E14CE000086B7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A71E50020DCF65800554A4F /* SharkORM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = SharkORM.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A71E5B620DCF87C00554A4F /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		3A71E5B720DCF87C00554A4F /* SchemaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemaManager.m; sourceTree = "<group>"; };
 		3A71E5B820DCF87C00554A4F /* SharkORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkORM.m; sourceTree = "<group>"; };
@@ -182,6 +189,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3A499B0120E14CE000086B7D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3A71E4FD20DCF65800554A4F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -192,10 +206,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A499AFD20E14CDF00086B7D /* SharkORM */ = {
+			isa = PBXGroup;
+			children = (
+				3A499AFE20E14CE000086B7D /* SharkORM.h */,
+				3A499AFF20E14CE000086B7D /* Info.plist */,
+			);
+			path = SharkORM;
+			sourceTree = "<group>";
+		};
+		3A499B0820E14CE000086B7D /* SharkORMTests */ = {
+			isa = PBXGroup;
+			children = (
+				3A499B0920E14CE000086B7D /* SharkORMTests.m */,
+				3A499B0B20E14CE000086B7D /* Info.plist */,
+			);
+			path = SharkORMTests;
+			sourceTree = "<group>";
+		};
 		3A71E4F720DCF65800554A4F = {
 			isa = PBXGroup;
 			children = (
-				3A71E5B420DCF87C00554A4F /* SharkORMCore */,
+				3A71E5B420DCF87C00554A4F /* SharkORM */,
+				3A499AFD20E14CDF00086B7D /* SharkORM */,
+				3A499B0820E14CE000086B7D /* SharkORMTests */,
 				3A71E50120DCF65800554A4F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -203,19 +237,21 @@
 		3A71E50120DCF65800554A4F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A71E50020DCF65800554A4F /* libSharkORMCore.a */,
+				3A71E50020DCF65800554A4F /* SharkORM.a */,
+				3A499B0420E14CE000086B7D /* SharkORMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		3A71E5B420DCF87C00554A4F /* SharkORMCore */ = {
+		3A71E5B420DCF87C00554A4F /* SharkORM */ = {
 			isa = PBXGroup;
 			children = (
+				3A2175A920E180890063B0B1 /* SharkORM.modulemap */,
 				3A71E5B520DCF87C00554A4F /* Core */,
 				3A71E60520DCF87D00554A4F /* SQLite */,
 				3A71E60A20DCF87D00554A4F /* Sync */,
 			);
-			path = SharkORMCore;
+			path = SharkORM;
 			sourceTree = "<group>";
 		};
 		3A71E5B520DCF87C00554A4F /* Core */ = {
@@ -414,9 +450,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A71E4FF20DCF65800554A4F /* SharkORMCore */ = {
+		3A499B0320E14CE000086B7D /* SharkORMTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "SharkORMCore" */;
+			buildConfigurationList = 3A499B1020E14CE000086B7D /* Build configuration list for PBXNativeTarget "SharkORMTests" */;
+			buildPhases = (
+				3A499B0020E14CE000086B7D /* Sources */,
+				3A499B0120E14CE000086B7D /* Frameworks */,
+				3A499B0220E14CE000086B7D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SharkORMTests;
+			productName = SharkORMTests;
+			productReference = 3A499B0420E14CE000086B7D /* SharkORMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3A71E4FF20DCF65800554A4F /* SharkORM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "SharkORM" */;
 			buildPhases = (
 				3A71E4FC20DCF65800554A4F /* Sources */,
 				3A71E4FD20DCF65800554A4F /* Frameworks */,
@@ -426,9 +479,9 @@
 			);
 			dependencies = (
 			);
-			name = SharkORMCore;
+			name = SharkORM;
 			productName = SharkORM;
-			productReference = 3A71E50020DCF65800554A4F /* libSharkORMCore.a */;
+			productReference = 3A71E50020DCF65800554A4F /* SharkORM.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -440,12 +493,15 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = SharkSync;
 				TargetAttributes = {
+					3A499B0320E14CE000086B7D = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
 					3A71E4FF20DCF65800554A4F = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
 				};
 			};
-			buildConfigurationList = 3A71E4FB20DCF65800554A4F /* Build configuration list for PBXProject "SharkORMCore" */;
+			buildConfigurationList = 3A71E4FB20DCF65800554A4F /* Build configuration list for PBXProject "SharkORM" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -457,12 +513,31 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3A71E4FF20DCF65800554A4F /* SharkORMCore */,
+				3A71E4FF20DCF65800554A4F /* SharkORM */,
+				3A499B0320E14CE000086B7D /* SharkORMTests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		3A499B0220E14CE000086B7D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		3A499B0020E14CE000086B7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A499B0A20E14CE000086B7D /* SharkORMTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3A71E4FC20DCF65800554A4F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -529,9 +604,46 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		3A499B1120E14CE000086B7D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3D9YGMP46N;
+				INFOPLIST_FILE = SharkORMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.sharksyn.SharkORMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3A499B1220E14CE000086B7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3D9YGMP46N;
+				INFOPLIST_FILE = SharkORMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.sharksyn.SharkORMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		3A71E50720DCF65800554A4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -580,16 +692,23 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_SWIFT_SYMBOLS = NO;
+				SWIFT_VERSION = 4.0;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
 			name = Debug;
 		};
 		3A71E50820DCF65800554A4F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -632,10 +751,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_SWIFT_SYMBOLS = NO;
+				SWIFT_VERSION = 4.0;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
 			name = Release;
 		};
@@ -643,10 +768,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				EXECUTABLE_PREFIX = "";
+				MODULEMAP_FILE = "${SRCROOT}/SharkORM/SharkORM.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_MODULE_NAME = SharkORM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = SharkORMCore/Core/BridgingHeader.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/SharkORM/Core/BridgingHeader.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -656,10 +785,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				EXECUTABLE_PREFIX = "";
+				MODULEMAP_FILE = "${SRCROOT}/SharkORM/SharkORM.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_MODULE_NAME = SharkORM;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = SharkORMCore/Core/BridgingHeader.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/SharkORM/Core/BridgingHeader.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -668,7 +801,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3A71E4FB20DCF65800554A4F /* Build configuration list for PBXProject "SharkORMCore" */ = {
+		3A499B1020E14CE000086B7D /* Build configuration list for PBXNativeTarget "SharkORMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A499B1120E14CE000086B7D /* Debug */,
+				3A499B1220E14CE000086B7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A71E4FB20DCF65800554A4F /* Build configuration list for PBXProject "SharkORM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A71E50720DCF65800554A4F /* Debug */,
@@ -677,7 +819,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "SharkORMCore" */ = {
+		3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "SharkORM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A71E50A20DCF65800554A4F /* Debug */,
