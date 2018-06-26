@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
 #ifndef BridgingHeader_h
 #define BridgingHeader_h
 
+#import "SharkORM.h"
+#import "SharkORM+Private.h"
 #import "SharkSync+Private.h"
 
 #endif /* BridgingHeader_h */

@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A2175FF20E231160063B0B1 /* SharkORM.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A71E5D620DCF87C00554A4F /* SharkORM.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A21760420E233670063B0B1 /* libSharkORM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A71E50020DCF65800554A4F /* libSharkORM.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		3A21762620E248870063B0B1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A21762520E248870063B0B1 /* Info.plist */; };
 		3A499B0A20E14CE000086B7D /* SharkORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A499B0920E14CE000086B7D /* SharkORMTests.m */; };
-		3A71E62520DCF87D00554A4F /* SchemaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B720DCF87C00554A4F /* SchemaManager.m */; };
 		3A71E62620DCF87D00554A4F /* SharkORM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B820DCF87C00554A4F /* SharkORM.m */; };
 		3A71E62720DCF87D00554A4F /* SRKLazyLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B920DCF87C00554A4F /* SRKLazyLoader.m */; };
 		3A71E62820DCF87D00554A4F /* SharkSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5BA20DCF87C00554A4F /* SharkSchemaManager.swift */; };
@@ -66,6 +68,16 @@
 		3A71E65C20DCF87D00554A4F /* SharkSyncGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3A21760020E2318D0063B0B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A71E4F820DCF65800554A4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A71E4FF20DCF65800554A4F;
+			remoteInfo = SharkORM;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		3A71E4FE20DCF65800554A4F /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -80,14 +92,13 @@
 
 /* Begin PBXFileReference section */
 		3A2175A920E180890063B0B1 /* SharkORM.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = SharkORM.modulemap; sourceTree = "<group>"; };
-		3A499AFE20E14CE000086B7D /* SharkORM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharkORM.h; sourceTree = "<group>"; };
-		3A499AFF20E14CE000086B7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A2175F520E230A20063B0B1 /* SharkORM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SharkORM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A21762520E248870063B0B1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A499B0420E14CE000086B7D /* SharkORMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharkORMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A499B0920E14CE000086B7D /* SharkORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SharkORMTests.m; sourceTree = "<group>"; };
 		3A499B0B20E14CE000086B7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3A71E50020DCF65800554A4F /* SharkORM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = SharkORM.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A71E50020DCF65800554A4F /* libSharkORM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSharkORM.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A71E5B620DCF87C00554A4F /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
-		3A71E5B720DCF87C00554A4F /* SchemaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemaManager.m; sourceTree = "<group>"; };
 		3A71E5B820DCF87C00554A4F /* SharkORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkORM.m; sourceTree = "<group>"; };
 		3A71E5B920DCF87C00554A4F /* SRKLazyLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKLazyLoader.m; sourceTree = "<group>"; };
 		3A71E5BA20DCF87C00554A4F /* SharkSchemaManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharkSchemaManager.swift; sourceTree = "<group>"; };
@@ -116,7 +127,6 @@
 		3A71E5D420DCF87C00554A4F /* SRKTransactionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKTransactionInfo.h; sourceTree = "<group>"; };
 		3A71E5D520DCF87C00554A4F /* SRKLazyLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKLazyLoader.h; sourceTree = "<group>"; };
 		3A71E5D620DCF87C00554A4F /* SharkORM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharkORM.h; sourceTree = "<group>"; };
-		3A71E5D720DCF87C00554A4F /* SchemaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchemaManager.h; sourceTree = "<group>"; };
 		3A71E5D820DCF87C00554A4F /* SRKUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKUtilities.h; sourceTree = "<group>"; };
 		3A71E5D920DCF87C00554A4F /* SharkORM+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SharkORM+Private.h"; sourceTree = "<group>"; };
 		3A71E5DB20DCF87C00554A4F /* SRKEncryptedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKEncryptedObject.m; sourceTree = "<group>"; };
@@ -189,6 +199,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3A2175F120E230A20063B0B1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A21760420E233670063B0B1 /* libSharkORM.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3A499B0120E14CE000086B7D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -206,13 +224,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3A499AFD20E14CDF00086B7D /* SharkORM */ = {
+		3A2175FD20E230E30063B0B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3A499AFE20E14CE000086B7D /* SharkORM.h */,
-				3A499AFF20E14CE000086B7D /* Info.plist */,
 			);
-			path = SharkORM;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		3A499B0820E14CE000086B7D /* SharkORMTests */ = {
@@ -228,17 +244,18 @@
 			isa = PBXGroup;
 			children = (
 				3A71E5B420DCF87C00554A4F /* SharkORM */,
-				3A499AFD20E14CDF00086B7D /* SharkORM */,
 				3A499B0820E14CE000086B7D /* SharkORMTests */,
 				3A71E50120DCF65800554A4F /* Products */,
+				3A2175FD20E230E30063B0B1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		3A71E50120DCF65800554A4F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A71E50020DCF65800554A4F /* SharkORM.a */,
+				3A71E50020DCF65800554A4F /* libSharkORM.a */,
 				3A499B0420E14CE000086B7D /* SharkORMTests.xctest */,
+				3A2175F520E230A20063B0B1 /* SharkORM.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -246,6 +263,7 @@
 		3A71E5B420DCF87C00554A4F /* SharkORM */ = {
 			isa = PBXGroup;
 			children = (
+				3A21762520E248870063B0B1 /* Info.plist */,
 				3A2175A920E180890063B0B1 /* SharkORM.modulemap */,
 				3A71E5B520DCF87C00554A4F /* Core */,
 				3A71E60520DCF87D00554A4F /* SQLite */,
@@ -258,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				3A71E5B620DCF87C00554A4F /* BridgingHeader.h */,
-				3A71E5B720DCF87C00554A4F /* SchemaManager.m */,
 				3A71E5B820DCF87C00554A4F /* SharkORM.m */,
 				3A71E5B920DCF87C00554A4F /* SRKLazyLoader.m */,
 				3A71E5BA20DCF87C00554A4F /* SharkSchemaManager.swift */,
@@ -274,7 +291,6 @@
 				3A71E5CE20DCF87C00554A4F /* Transactions */,
 				3A71E5D520DCF87C00554A4F /* SRKLazyLoader.h */,
 				3A71E5D620DCF87C00554A4F /* SharkORM.h */,
-				3A71E5D720DCF87C00554A4F /* SchemaManager.h */,
 				3A71E5D820DCF87C00554A4F /* SRKUtilities.h */,
 				3A71E5D920DCF87C00554A4F /* SharkORM+Private.h */,
 				3A71E5DA20DCF87C00554A4F /* PersistableObjects */,
@@ -449,7 +465,37 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		3A2175F220E230A20063B0B1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A2175FF20E231160063B0B1 /* SharkORM.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		3A2175F420E230A20063B0B1 /* SharkORM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A2175FA20E230A20063B0B1 /* Build configuration list for PBXNativeTarget "SharkORM" */;
+			buildPhases = (
+				3A2175F020E230A20063B0B1 /* Sources */,
+				3A2175F120E230A20063B0B1 /* Frameworks */,
+				3A2175F220E230A20063B0B1 /* Headers */,
+				3A2175F320E230A20063B0B1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A21760120E2318D0063B0B1 /* PBXTargetDependency */,
+			);
+			name = SharkORM;
+			productName = SharkORMFMK;
+			productReference = 3A2175F520E230A20063B0B1 /* SharkORM.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		3A499B0320E14CE000086B7D /* SharkORMTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A499B1020E14CE000086B7D /* Build configuration list for PBXNativeTarget "SharkORMTests" */;
@@ -467,9 +513,9 @@
 			productReference = 3A499B0420E14CE000086B7D /* SharkORMTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3A71E4FF20DCF65800554A4F /* SharkORM */ = {
+		3A71E4FF20DCF65800554A4F /* libSharkORM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "SharkORM" */;
+			buildConfigurationList = 3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "libSharkORM" */;
 			buildPhases = (
 				3A71E4FC20DCF65800554A4F /* Sources */,
 				3A71E4FD20DCF65800554A4F /* Frameworks */,
@@ -479,9 +525,9 @@
 			);
 			dependencies = (
 			);
-			name = SharkORM;
+			name = libSharkORM;
 			productName = SharkORM;
-			productReference = 3A71E50020DCF65800554A4F /* SharkORM.a */;
+			productReference = 3A71E50020DCF65800554A4F /* libSharkORM.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -493,6 +539,9 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = SharkSync;
 				TargetAttributes = {
+					3A2175F420E230A20063B0B1 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
 					3A499B0320E14CE000086B7D = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
@@ -513,13 +562,22 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3A71E4FF20DCF65800554A4F /* SharkORM */,
+				3A71E4FF20DCF65800554A4F /* libSharkORM */,
 				3A499B0320E14CE000086B7D /* SharkORMTests */,
+				3A2175F420E230A20063B0B1 /* SharkORM */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3A2175F320E230A20063B0B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A21762620E248870063B0B1 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3A499B0220E14CE000086B7D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -530,6 +588,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3A2175F020E230A20063B0B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3A499B0020E14CE000086B7D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -594,7 +659,6 @@
 				3A71E62720DCF87D00554A4F /* SRKLazyLoader.m in Sources */,
 				3A71E65620DCF87D00554A4F /* SyncInterface.swift in Sources */,
 				3A71E63B20DCF87D00554A4F /* SRKResultSet.m in Sources */,
-				3A71E62520DCF87D00554A4F /* SchemaManager.m in Sources */,
 				3A71E63A20DCF87D00554A4F /* SRKCommitOptions.m in Sources */,
 				3A71E63020DCF87D00554A4F /* SRKGlobals.m in Sources */,
 				3A71E64C20DCF87D00554A4F /* sqlite3.c in Sources */,
@@ -603,7 +667,73 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3A21760120E2318D0063B0B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A71E4FF20DCF65800554A4F /* libSharkORM */;
+			targetProxy = 3A21760020E2318D0063B0B1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		3A2175FB20E230A20063B0B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3D9YGMP46N;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SharkORM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = io.sharksync.SharkORM;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		3A2175FC20E230A20063B0B1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3D9YGMP46N;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SharkORM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = io.sharksync.SharkORM;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		3A499B1120E14CE000086B7D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -658,7 +788,7 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -692,7 +822,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -723,7 +853,7 @@
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -751,7 +881,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -767,9 +897,11 @@
 		3A71E50A20DCF65800554A4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				EXECUTABLE_PREFIX = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULEMAP_FILE = "${SRCROOT}/SharkORM/SharkORM.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -786,9 +918,11 @@
 		3A71E50B20DCF65800554A4F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				EXECUTABLE_PREFIX = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULEMAP_FILE = "${SRCROOT}/SharkORM/SharkORM.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -805,6 +939,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3A2175FA20E230A20063B0B1 /* Build configuration list for PBXNativeTarget "SharkORM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A2175FB20E230A20063B0B1 /* Debug */,
+				3A2175FC20E230A20063B0B1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3A499B1020E14CE000086B7D /* Build configuration list for PBXNativeTarget "SharkORMTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -823,7 +966,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "SharkORM" */ = {
+		3A71E50920DCF65800554A4F /* Build configuration list for PBXNativeTarget "libSharkORM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A71E50A20DCF65800554A4F /* Debug */,

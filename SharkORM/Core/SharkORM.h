@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,6 @@
 
 #ifndef __SHARKORM_H
 #define __SHARKORM_H
-
-#define SHARK_DATE              20171025
-#define SHARK_VER               2.0200
 
 #import <Foundation/Foundation.h>
 #import <objc/message.h>
@@ -189,11 +186,11 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  * @param aDelegate Must be an initialised object that implements the SRKDelegate protocol.
  * @return void
  */
-+(void)setDelegate:(id<SRKDelegate>)aDelegate;
++(void)setDelegate:(id<SRKDelegate>)delegate;
 /**
  * Sets the SRKConfigurationBlock object for the ORM, allowing the ORM to startup across multiple threads and block entity access until the initial setup has been completed.
  *
- * @param SRKConfigurationBlock, this usually contains the "setDelegate" and "openDatabase" instructions.
+ * @param configBlock, this usually contains the "setDelegate" and "openDatabase" instructions.
  * @return SRKConfiguration*, used to allow the startup of Swift/Storyboard apps that have a lifecycle that starts in advance of the AppDelegate methods
  */
 +(SRKConfiguration*)setStartupConfiguration:(SRKConfigurationBlock)configBlock;

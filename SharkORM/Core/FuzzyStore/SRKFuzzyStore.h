@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -36,9 +36,8 @@
  * Adds an object to the store with a reference.
  
  *
- * @param (id)object the object to store
- * @param (NSString*)identifier the reference identifier used to reference the object
- * @return void
+ * @param object the object to store
+ * @param identifier the reference identifier used to reference the object
  */
 - (void)addObject:(id)object withIdentifier:(NSString*)identifier;
 /**
@@ -48,7 +47,6 @@
  * @param (id)object the object to store
  * @param (NSString*)identifier the reference identifier used to reference the object
  * @param (NSArray*)tags tags to categorize the stored object
- * @return void
  */
 - (void)addObject:(id)object withIdentifier:(NSString*)identifier andTags:(NSArray*)tags;
 /**
@@ -56,7 +54,6 @@
  
  *
  * @param (NSString*)identifier the reference identifier used to reference the object
- * @return void
  */
 - (void)removeObjectWithIdentifier:(NSString*)identifier;
 /**

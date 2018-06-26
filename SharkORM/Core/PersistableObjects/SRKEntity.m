@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -301,9 +301,6 @@ static int obCount=0;
 + (void)inspectAndPopulateSchema:(NSString*)entity {
     
     /* now look within the entity to get its property types */
-    
-    NSString* clName = [[self class] description];
-    
     /* because we no longer inspect the superclass since 2.0.5+ and the introduction of inheritance,
      we need to set the default PK as NUMBER until it is overwritten if different */
     objc_property_t primaryKeyProperty = class_getProperty([self class], SRK_DEFAULT_PRIMARY_KEY_NAME.UTF8String);
@@ -1869,7 +1866,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
     
 }
 
-- (NSArray*)modifiedFieldNames {
+- (NSArray<NSString*>*)modifiedFieldNames {
     
     @synchronized (self.dirtyFields) {
         
@@ -2278,7 +2275,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
             /* now we need to populate any fields that are based on primatives with their default values */
             for (NSString* f in self.fieldNames) {
                 
-                NSInteger type = [SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:f];
+                int type = (int)[SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:f];
                 if ([self.class isTypeAPrimitive:type] && ![self getField:f]) {
                     [self setFieldRaw:f value:@(0)];
                 }

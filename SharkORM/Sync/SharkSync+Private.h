@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,14 @@
 #import "SRKDefunctObject.h"
 #import "SRKDeferredChange.h"
 
+typedef enum : NSUInteger {
+    SharkSyncOperationCreate = 1,     // a new object has been created
+    SharkSyncOperationSet = 2,        // a value(s) have been set
+    SharkSyncOperationDelete = 3,     // object has been removed from the store
+    SharkSyncOperationIncrement = 4,  // value has been incremented - future implementation
+    SharkSyncOperationDecrement = 5,  // value has been decremented - future implementation
+} SharkSyncOperation;
+
 @interface SharkSync ()
 
 + (NSString*)MD5FromString:(NSString*)inVar;
@@ -40,7 +48,7 @@
 + (void)setEffectiveRecorGroup:(NSString*)group;
 + (void)clearEffectiveRecordGroup;
 + (id)decryptValue:(NSString*)value;
-+ (void)queueObject:(SRKEntity *)object withChanges:(NSMutableDictionary*)changes withOperation:(NSUInteger)operation inHashedGroup:(NSString*)group;
++ (void)queueObject:(SRKEntity *)object withChanges:(NSMutableDictionary*)changes withOperation:(SharkSyncOperation)operation inHashedGroup:(NSString*)group;
 
 @end
 

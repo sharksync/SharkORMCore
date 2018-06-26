@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3A2175F420E230A20063B0B1"
-               BuildableName = "SharkORM.framework"
-               BlueprintName = "SharkORM"
+               BlueprintIdentifier = "3A71E4FF20DCF65800554A4F"
+               BuildableName = "libSharkORM.a"
+               BlueprintName = "libSharkORM"
                ReferencedContainer = "container:SharkORM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3A2175F420E230A20063B0B1"
-            BuildableName = "SharkORM.framework"
-            BlueprintName = "SharkORM"
+            BlueprintIdentifier = "3A71E4FF20DCF65800554A4F"
+            BuildableName = "libSharkORM.a"
+            BlueprintName = "libSharkORM"
             ReferencedContainer = "container:SharkORM.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3A2175F420E230A20063B0B1"
-            BuildableName = "SharkORM.framework"
-            BlueprintName = "SharkORM"
+            BlueprintIdentifier = "3A71E4FF20DCF65800554A4F"
+            BuildableName = "libSharkORM.a"
+            BlueprintName = "libSharkORM"
             ReferencedContainer = "container:SharkORM.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,6 @@
 #import "SRKEntityChain.h"
 #import "SRKSyncRegisteredClass.h"
 #import "SharkORM-Swift.h"
-
-typedef enum : NSUInteger {
-    SharkSyncOperationCreate = 1,     // a new object has been created
-    SharkSyncOperationSet = 2,        // a value(s) have been set
-    SharkSyncOperationDelete = 3,     // object has been removed from the store
-    SharkSyncOperationIncrement = 4,  // value has been incremented - future implementation
-    SharkSyncOperationDecrement = 5,  // value has been decremented - future implementation
-} SharkSyncOperation;
 
 @interface SRKSyncObject ()
 

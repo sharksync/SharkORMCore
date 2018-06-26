@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -123,7 +123,7 @@ class SyncRequest {
                     if targetObject != nil {
                         
                         // check to see if this property is actually in the class, if not, store it for a future schema
-                        for fieldName: String in targetObject!.fieldNames() as! [String] {
+                        for fieldName: String in targetObject!.fieldNames() {
                             if (fieldName == property) {
                                 targetObject?.setField(property, value: decryptedValue as! NSObject)
                                 if targetObject?.getRecordGroup() == nil {
@@ -160,7 +160,7 @@ class SyncRequest {
                                 targetObject!.id = record_id
                                 
                                 // check to see if this property is actually in the class, if not, store it for a future schema
-                                for fieldName: String in targetObject!.fieldNames() as! [String] {
+                                for fieldName: String in targetObject!.fieldNames() {
                                     if (fieldName == property) {
                                         targetObject!.setField(property, value: decryptedValue as! NSObject)
                                         if targetObject?.getRecordGroup() == nil {

@@ -1,6 +1,6 @@
 //    MIT License
 //
-//    Copyright (c) 2016 SharkSync
+//    Copyright (c) 2010-2018 SharkSync
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,6 @@
 -(double)fetchSumForQuery:(SRKQuery*)query field:(NSString*)fieldname;
 -(NSArray*)fetchDistinctForQuery:(SRKQuery*)query field:(NSString*)fieldname;
 -(NSArray*)fetchIDsForQuery:(SRKQuery*)query;
-+(NSMutableDictionary*)tableSchemas;
 +(SRKSettings*)getSettings;
 +(sqlite3*)handleForDatabase:(NSString*)dbName;
 +(NSString*)databaseNameForClass:(Class)classDecl;
@@ -52,11 +51,7 @@
 +(void)setEntityRevision:(int)revision forEntity:(NSString*)entity inDatabase:(NSString*)dbName;
 +(int)getEntityRevision:(NSString*)entity inDatabase:(NSString*)dbName;
 +(NSInteger)primaryKeyType:(NSString*)tableName;
-+(void)cacheSchemaForDatabase:(NSString*)database withHandle:(sqlite3*)db;
-+(void)cachePrmaryKeyForTable:(NSString*)table inDatabase:(NSString*)dbName;
-+(void)cachePrmaryKeyTypeTable:(NSString*)table inDatabase:(NSString*)dbName;
 +(void)executeSQL:(NSString*)sql inDatabase:(NSString*)dbName;
-+ (BOOL)column:(NSString*)column existsInTable:(NSString *)table;
 +(id)getValueFromQuery:query inClass:classDecl;
 
 @end
