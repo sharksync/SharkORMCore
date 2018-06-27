@@ -36,6 +36,7 @@
 		self.defaultObjectDomain = @"default";
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		NSString *documentDirectory = [paths objectAtIndex:0];
+        [[NSFileManager defaultManager] createDirectoryAtPath:documentDirectory withIntermediateDirectories:YES attributes:nil error:nil];
 		self.databaseLocation = documentDirectory;
 		self.defaultDatabaseName = @"database";
 		self.encryptionKey = @"bvzdsrthjnbvcxdfrtyuijbvcxdrtyuhjbvcxdfsdfghjcfhjw45678iuojkbnvcxfe5678uijhvgcf";

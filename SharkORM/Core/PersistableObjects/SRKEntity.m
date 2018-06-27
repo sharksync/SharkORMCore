@@ -31,7 +31,6 @@
 #import "SharkORM+Private.h"
 #import "SRKUtilities.h"
 #import "SRKIndexDefinition+Private.h"
-#import "FTSRegistry.h"
 #import "SRKLazyLoader.h"
 #import "SRKUnsupportedObject.h"
 #import "SRKEncryptedObject.h"
@@ -100,11 +99,6 @@ static int obCount=0;
     return [o entityclass:[self class]];
 }
 
-+(SRKQuery*)fts {
-    SRKQuery* q = [SRKFTSQuery new];
-    return [q entityclass:[self class]];
-}
-
 +(SRKQuery*)query {
     SRKQuery* q = [SRKQuery new];
     return [q entityclass:[self class]];
@@ -112,8 +106,8 @@ static int obCount=0;
 
 + (id)firstMatchOf:(NSString *)fieldName withValue:(id)value {
     
-    NSString* whereString = [NSString stringWithFormat:@"%@ = %%@", fieldName];
-    NSArray* results = [[[[self.class query] whereWithFormat:whereString, value] limit:1] fetch];
+    NSString* whereString = [NSString stringWithFormat:@"%@ = ?", fieldName];
+    NSArray* results = [[[[self.class query] where:whereString parameters:@[value]] limit:1] fetch];
     if (results && results.count > 0) {
         
         return [results objectAtIndex:0];
@@ -222,11 +216,6 @@ static int obCount=0;
 
 - (void)setCachedPrimaryKey:(id)key {
     NSAssert(true, @"Call should be implemented in SRKObject or SRKStringObject");
-}
-
-/* fts parameters */
-+ (NSArray<NSString*>*)FTSParametersForEntity {
-    return nil;
 }
 
 + (BOOL)entityDoesNotRaiseEvents {
@@ -1537,7 +1526,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
                 if ([self.class uniquePropertiesForClass]) {
                     NSArray* uniqueProperties = [self.class uniquePropertiesForClass];
                     if (uniqueProperties.count == 1) {
-                        [idxDef addIndexForProperty:[uniqueProperties objectAtIndex:0] propertyOrder:[[uniqueProperties objectAtIndex:0] isKindOfClass:[NSString class]] ? SRKIndexSortOrderNoCase : SRKIndexSortOrderAscending];
+                        [idxDef add:[uniqueProperties objectAtIndex:0] order:[[uniqueProperties objectAtIndex:0] isKindOfClass:[NSString class]] ? SRKIndexSortOrderNoCase : SRKIndexSortOrderAscending];
                     } else if (uniqueProperties.count > 1) {
                         [idxDef addIndexForProperty:[uniqueProperties objectAtIndex:0] propertyOrder:[[uniqueProperties objectAtIndex:0] isKindOfClass:[NSString class]] ? SRKIndexSortOrderNoCase : SRKIndexSortOrderAscending secondaryProperty:[uniqueProperties objectAtIndex:1] secondaryOrder:[[uniqueProperties objectAtIndex:1] isKindOfClass:[NSString class]] ? SRKIndexSortOrderNoCase : SRKIndexSortOrderAscending];
                     }
@@ -1568,7 +1557,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
     
     Class originalClass = ((SRKEntity*)self).class;
     
-    self = [[[[((SRKEntity*)self).class query] whereWithFormat:@"Id = %@", priKeyValue] limit:1] fetch].firstObject;
+    self = [[[[((SRKEntity*)self).class query] where:@"Id = ?" parameters:@[priKeyValue]] limit:1] fetch].firstObject;
     if (self) {
         exists = YES;
     } else {
@@ -1697,7 +1686,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
                     /* there is no point getting the whole object if we won't be using any other values */
                     BOOL retain = [SharkORM getSettings].retainLightweightObjects;
                     if (retain) {
-                        SRKEntity* ob = [[[[self.class query] whereWithFormat:@"Id = %@", self.Id] limit:1] fetch].firstObject;
+                        SRKEntity* ob = [[[[self.class query] where:@"Id = ?" parameters:@[self.Id]] limit:1] fetch].firstObject;
                         if (ob) {
                             value = [ob getField:fieldName];
                             for (NSString* f in ob.fieldNames) {
@@ -2431,17 +2420,17 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
             if (!(queryString.length == 0)) {
                 [queryString appendString:@" AND "];
             }
-            [queryString appendString:[NSString stringWithFormat:@" %@ = %%@ ", property]];
+            [queryString appendString:[NSString stringWithFormat:@" %@ = ? ", property]];
             [propertyValues addObject:[self getField:property] ? [self getField:property] : [NSNull null]];
         }
         if (self.exists) {
-            [queryString appendString:@" AND Id != %@"];
+            [queryString appendString:@" AND Id != ?"];
             [propertyValues addObject:self.Id];
         }
         if (queryString.length != 0) {
             
         }
-        if ([[[self.class query] whereWithFormat:queryString withParameters:propertyValues] count]) {
+        if ([[[self.class query] where:queryString parameters:@[propertyValues]] count]) {
             return NO;
         }
     }

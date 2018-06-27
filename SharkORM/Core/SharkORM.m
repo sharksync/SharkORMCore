@@ -32,7 +32,6 @@
 #import "SRKUtilities.h"
 #import "SRKUnsupportedObject.h"
 #import "SRKJoinObject.h"
-#import "FTSRegistry.h"
 #import "SRKGlobals.h"
 #import "SRKTransaction+Private.h"
 #import "SharkORM-Swift.h"
@@ -151,7 +150,7 @@ typedef enum : int {
                     currentTableName = [[SRKGlobals sharedObject] getFQNameForClass:currentT];
                 }
                 
-                [[[NSClassFromString(currentTableName) query] fetchLightweight] removeAll];
+                [[[NSClassFromString(currentTableName) query] fetchLightweight] remove];
                 
                 NSArray* oldTableData = [results objectForKey:[NSString stringWithFormat:@"Z%@", currentT.uppercaseString]];
                 if (oldTableData) {
@@ -468,46 +467,6 @@ void spatialCalc(sqlite3_context *context, int argc, sqlite3_value **argv)
     }
 }
 
-+(void)prepareFTSTableForClass:(Class)classDecl withPropertyList:(NSArray*)properties {
-    
-    NSMutableString* propertiesList = [NSMutableString new];
-    for (NSString* p in properties) {
-        if (propertiesList.length > 0) {
-            [propertiesList appendString:@", "];
-        }
-        [propertiesList appendString:p];
-    }
-    
-    BOOL dropItLikeItsHot = NO;
-    if (![FTSRegistry registryForTable:[classDecl description]]) {
-        dropItLikeItsHot = YES;
-    } else {
-        FTSRegistry* reg = [FTSRegistry registryForTable:[classDecl description]];
-        if (![reg.columns isEqualToString:[NSString stringWithString:propertiesList]]) {
-            dropItLikeItsHot = YES;
-        }
-        [reg remove];
-    }
-    
-    if (dropItLikeItsHot) {
-        
-        [SharkORM executeSQL:[NSString stringWithFormat:@"DROP TABLE fts_%@;", [classDecl description]] inDatabase:nil];
-        [SharkORM executeSQL:[NSString stringWithFormat:@"CREATE VIRTUAL TABLE fts_%@ USING fts3(%@);",[classDecl description],propertiesList] inDatabase:nil];
-        
-        FTSRegistry* reg = [FTSRegistry new];
-        reg.tableName = [classDecl description];
-        reg.uptodate = NO;
-        reg.columns = propertiesList;
-        [reg commit];
-        
-        [SharkORM executeSQL:[NSString stringWithFormat:@"INSERT INTO fts_%@(docid,%@) SELECT Id, %@ FROM %@;", [classDecl description],propertiesList,propertiesList,[classDecl description]] inDatabase:nil];
-        
-    }
-    
-}
-
-
-
 void dateFromString(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
     switch( sqlite3_value_type(argv[0]) )
@@ -790,15 +749,6 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
                                 if (!entity.exists) {
                                     [entity setField:SRK_DEFAULT_PRIMARY_KEY_NAME value:@(sqlite3_last_insert_rowid(databaseHandle))];
                                 }
-                                /* check to see if this object is a fts object and clear the existing row */
-                                if ([[entity class] FTSParametersForEntity]) {
-                                    [SharkORM executeSQL:[NSString stringWithFormat:@"DELETE FROM fts_%@ WHERE docid = %@", [[entity class] description], [entity getField:SRK_DEFAULT_PRIMARY_KEY_NAME]] inDatabase:nil];
-                                }
-                            } else {
-                                /* check to see if this object is a fts object and clear the existing row */
-                                if ([[entity class] FTSParametersForEntity]) {
-                                    [SharkORM executeSQL:[NSString stringWithFormat:@"DELETE FROM fts_%@ WHERE docid = '%@'", [[entity class] description], [entity getField:SRK_DEFAULT_PRIMARY_KEY_NAME]] inDatabase:nil];
-                                }
                             }
                             if (!entity.exists) {
                                 /* now we need to register this object with the default registry, first check to see if the user wants a default domain */
@@ -879,28 +829,6 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
             }
             
             sqlite3_finalize(statement);
-            
-            /* update the FTS table if required */
-            /* check to see if this object is a fts object and clear the existing row */
-            if ([[entity class] FTSParametersForEntity]) {
-                NSMutableString* propertiesList = [NSMutableString new];
-                
-                for (NSString* p in [[entity class] FTSParametersForEntity]) {
-                    if (propertiesList.length > 0) {
-                        [propertiesList appendString:@", "];
-                    }
-                    [propertiesList appendString:p];
-                }
-                
-                if ([entity.class FTSParametersForEntity] != nil) {
-                    if (priKeyType == SRK_PROPERTY_TYPE_NUMBER) {
-                        [SharkORM executeSQL:[NSString stringWithFormat:@"INSERT INTO fts_%@(docid, %@) SELECT Id, %@ FROM %@ WHERE Id = %@", [[entity class] description],propertiesList,propertiesList, [[entity class] description], [entity getField:SRK_DEFAULT_PRIMARY_KEY_NAME]] inDatabase:nil];
-                    } else {
-                        [SharkORM executeSQL:[NSString stringWithFormat:@"INSERT INTO fts_%@(docid, %@) SELECT Id, %@ FROM %@ WHERE Id = '%@'", [[entity class] description],propertiesList,propertiesList, [[entity class] description], [entity getField:SRK_DEFAULT_PRIMARY_KEY_NAME]] inDatabase:nil];
-                    }
-                }
-                
-            }
             
         }
         
@@ -1005,16 +933,10 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
     };
     
     if (succeded) {
-        /* check to see if this object is a fts object and clear the existing row */
-        if ([[entity class] FTSParametersForEntity]) {
-            [SharkORM executeSQL:[NSString stringWithFormat:@"DELETE FROM fts_%@ WHERE docid = %@", [[entity class] description], entity.reflectedPrimaryKeyValue] inDatabase:nil];
-        }
-        
         // if we are not within a transaction then execute any supplied blocks within the commit object
         if (entity.commitOptions.postRemoveBlock && ![SRKTransaction transactionIsInProgress]) {
             entity.commitOptions.postRemoveBlock();
         }
-        
     }
     
     return succeded;
@@ -1111,11 +1033,6 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
         
         // update the entity with the new primary key
         [entity setId:(id)newPrimaryKey];
-        
-        /* check to see if this object is a fts object and clear the existing row */
-        if ([[entity class] FTSParametersForEntity]) {
-            [SharkORM executeSQL:[NSString stringWithFormat:@"DELETE FROM fts_%@ WHERE docid = %@", [[entity class] description], entity.reflectedPrimaryKeyValue] inDatabase:nil];
-        }
         
     }
     

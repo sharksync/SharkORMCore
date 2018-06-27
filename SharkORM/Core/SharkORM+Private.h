@@ -45,7 +45,6 @@
 +(SRKSettings*)getSettings;
 +(sqlite3*)handleForDatabase:(NSString*)dbName;
 +(NSString*)databaseNameForClass:(Class)classDecl;
-+(void)prepareFTSTableForClass:(Class)classDecl withPropertyList:(NSArray*)properties;
 +(void)setSchemaRevision:(int)revision inDatabase:(NSString*)dbName;
 +(int)getSchemaRevisioninDatabase:(NSString*)dbName;
 +(void)setEntityRevision:(int)revision forEntity:(NSString*)entity inDatabase:(NSString*)dbName;

@@ -27,10 +27,7 @@
 @dynamic className;
 
 + (SRKIndexDefinition *)indexDefinitionForEntity {
-    SRKIndexDefinition* indexDef = [SRKIndexDefinition new];
-    // use SRKIndexSortOrderNoCase because faster for strings
-    [indexDef addIndexForProperty:@"className" propertyOrder:SRKIndexSortOrderNoCase];
-    return indexDef;
+    return [[SRKIndexDefinition alloc] init:@[@"className"]];
 }
 
 @end

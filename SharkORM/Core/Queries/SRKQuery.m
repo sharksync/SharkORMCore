@@ -476,9 +476,6 @@
 
 - (SRKObject*)first {
     
-    /* look to see if this request is a FTS query, if so change the restrictions to focus on the fts table */
-    /* the original query may look like name MATCH 'adrian', but these object will be in an fts_ table */
-    
     self.limitOf = 1;
     
     NSArray* results = [[SharkORM new] fetchEntitySetForQuery:self];
@@ -491,24 +488,6 @@
 
 
 - (SRKResultSet*)fetch {
-	
-	/* look to see if this request is a FTS query, if so change the restrictions to focus on the fts table */
-	/* the original query may look like name MATCH 'adrian', but these object will be in an fts_ table */
-	if (self.fts) {
-		/*
-		 check to see if this object is actually an FTS object and someone isn't using the wrong query type.
-		 */
-		if (![self.classDecl FTSParametersForEntity]) {
-			SRKError* err = [SRKError new];
-			err.errorMessage = [NSString stringWithFormat:@"You have attempted to query the class '%@' using the fts (Full Text Search) query object.  But this class does not implement the 'FTSParametersForEntity' method, so the query returned no results.", self.classDecl];
-			
-			if ([[[SRKGlobals sharedObject] delegate] respondsToSelector:@selector(databaseError:)]) {
-				[[[SRKGlobals sharedObject] delegate] performSelector:@selector(databaseError:) withObject:err];
-			}
-			return [SRKResultSet new]; /* no results, as no FTS objects to query */
-		}
-		self.whereClause = [NSString stringWithFormat:@"Id IN (SELECT docid FROM fts_%@ WHERE %@)", [self.classDecl description], self.whereClause];
-	}
 	
 	if (!self.batchSize) {
 		

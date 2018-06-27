@@ -40,7 +40,7 @@ class SyncRequest {
         requestData["device_id"] = "9e4ac6a5-aac3-4362-b530-0be53a9e6619"
         
         // pull out a reasonable amount of writes to be sent to the server
-        let changeResults = (SharkSyncChange.query().limit(100).order(by: "timestamp").fetch()) as! [SharkSyncChange]
+        let changeResults = (SharkSyncChange.query().limit(100).order("timestamp").fetch()) as! [SharkSyncChange]
         self.changes = changeResults
         
         // now add in the changes, and the tidemarks
@@ -59,7 +59,7 @@ class SyncRequest {
         requestData["changes"] = changes
         
         // now select out the data groups to poll for, oldest first
-        let groupResults = SRKSyncGroup.query().limit(100).order(by: "last_polled").fetch() as! [SRKSyncGroup]
+        let groupResults = SRKSyncGroup.query().limit(100).order("last_polled").fetch() as! [SRKSyncGroup]
         self.groups = groupResults
         var groups: [[String:Any]] = []
         for group: SRKSyncGroup in groupResults {
@@ -72,7 +72,9 @@ class SyncRequest {
     func requestResponded(_ response: [String: Any], changes: [SharkSyncChange]) {
         
         /* clear down the transmitted data, as we know it arrived okay */
-        self.changes.removeAll()
+        for o in changes {
+            o.remove()
+        }
         
         // check for success/error
         if !((response["Success"] as? Bool) ?? false) {
@@ -149,7 +151,7 @@ class SyncRequest {
                         
                     }
                     else {
-                        if SRKDefunctObject.query().where(withFormat: "defunctId = %@", withParameters: [record_id]).count() > 0 {
+                        if SRKDefunctObject.query().where("defunctId = %@", parameters: [record_id]).count() > 0 {
                             // defunct object, do nothing
                         }
                         else {

@@ -10,7 +10,10 @@
 		3A2175FF20E231160063B0B1 /* SharkORM.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A71E5D620DCF87C00554A4F /* SharkORM.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A21760420E233670063B0B1 /* libSharkORM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A71E50020DCF65800554A4F /* libSharkORM.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		3A21762620E248870063B0B1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A21762520E248870063B0B1 /* Info.plist */; };
-		3A499B0A20E14CE000086B7D /* SharkORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A499B0920E14CE000086B7D /* SharkORMTests.m */; };
+		3A21769720E3DE8C0063B0B1 /* SharkORMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A21769620E3DE8C0063B0B1 /* SharkORMTests.swift */; };
+		3A21769920E3DE8C0063B0B1 /* SharkORM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2175F520E230A20063B0B1 /* SharkORM.framework */; };
+		3A2176A020E3EF6B0063B0B1 /* DataObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A21769F20E3EF6B0063B0B1 /* DataObjects.swift */; };
+		3A2176A620E3F2A50063B0B1 /* SchemaTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2176A520E3F2A50063B0B1 /* SchemaTest.swift */; };
 		3A71E62620DCF87D00554A4F /* SharkORM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B820DCF87C00554A4F /* SharkORM.m */; };
 		3A71E62720DCF87D00554A4F /* SRKLazyLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B920DCF87C00554A4F /* SRKLazyLoader.m */; };
 		3A71E62820DCF87D00554A4F /* SharkSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5BA20DCF87C00554A4F /* SharkSchemaManager.swift */; };
@@ -18,12 +21,10 @@
 		3A71E62A20DCF87D00554A4F /* SRKRelationship.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5BC20DCF87C00554A4F /* SRKRelationship.m */; };
 		3A71E62B20DCF87D00554A4F /* SRKJoinObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5BE20DCF87C00554A4F /* SRKJoinObject.m */; };
 		3A71E62C20DCF87D00554A4F /* SRKQueryProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5BF20DCF87C00554A4F /* SRKQueryProfile.m */; };
-		3A71E62D20DCF87D00554A4F /* SRKFTSQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5C020DCF87C00554A4F /* SRKFTSQuery.m */; };
 		3A71E62E20DCF87D00554A4F /* SRKQueryAsyncHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5C220DCF87C00554A4F /* SRKQueryAsyncHandler.m */; };
 		3A71E62F20DCF87D00554A4F /* SRKQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5C320DCF87C00554A4F /* SRKQuery.m */; };
 		3A71E63020DCF87D00554A4F /* SRKGlobals.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5C820DCF87C00554A4F /* SRKGlobals.m */; };
 		3A71E63120DCF87D00554A4F /* SRKError.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5C920DCF87C00554A4F /* SRKError.m */; };
-		3A71E63220DCF87D00554A4F /* FTSRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5CB20DCF87C00554A4F /* FTSRegistry.m */; };
 		3A71E63320DCF87D00554A4F /* SRKSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5CD20DCF87C00554A4F /* SRKSettings.m */; };
 		3A71E63420DCF87D00554A4F /* SRKContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5D020DCF87C00554A4F /* SRKContext.m */; };
 		3A71E63520DCF87D00554A4F /* SRKTransactionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5D120DCF87C00554A4F /* SRKTransactionInfo.m */; };
@@ -43,7 +44,6 @@
 		3A71E64320DCF87D00554A4F /* SRKCompoundIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5F420DCF87C00554A4F /* SRKCompoundIndex.m */; };
 		3A71E64420DCF87D00554A4F /* SRKIndexProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5F620DCF87C00554A4F /* SRKIndexProperty.m */; };
 		3A71E64520DCF87D00554A4F /* SRKIndexDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5F720DCF87D00554A4F /* SRKIndexDefinition.m */; };
-		3A71E64620DCF87D00554A4F /* SRKFuzzyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5FA20DCF87D00554A4F /* SRKFuzzyStore.m */; };
 		3A71E64720DCF87D00554A4F /* SRKEventHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5FC20DCF87D00554A4F /* SRKEventHandler.m */; };
 		3A71E64820DCF87D00554A4F /* SRKEventRegistryObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5FD20DCF87D00554A4F /* SRKEventRegistryObject.m */; };
 		3A71E64920DCF87D00554A4F /* SRKEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E60120DCF87D00554A4F /* SRKEvent.m */; };
@@ -76,6 +76,13 @@
 			remoteGlobalIDString = 3A71E4FF20DCF65800554A4F;
 			remoteInfo = SharkORM;
 		};
+		3A21769A20E3DE8C0063B0B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A71E4F820DCF65800554A4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A2175F420E230A20063B0B1;
+			remoteInfo = SharkORM;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -96,9 +103,11 @@
 		3A21762520E248870063B0B1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A21762720E399280063B0B1 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = SOURCE_ROOT; };
 		3A21762820E399350063B0B1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		3A499B0420E14CE000086B7D /* SharkORMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharkORMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A499B0920E14CE000086B7D /* SharkORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SharkORMTests.m; sourceTree = "<group>"; };
-		3A499B0B20E14CE000086B7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A21769420E3DE8C0063B0B1 /* SharkORMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharkORMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A21769620E3DE8C0063B0B1 /* SharkORMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharkORMTests.swift; sourceTree = "<group>"; };
+		3A21769820E3DE8C0063B0B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A21769F20E3EF6B0063B0B1 /* DataObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataObjects.swift; sourceTree = "<group>"; };
+		3A2176A520E3F2A50063B0B1 /* SchemaTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaTest.swift; sourceTree = "<group>"; };
 		3A71E50020DCF65800554A4F /* libSharkORM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSharkORM.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A71E5B620DCF87C00554A4F /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		3A71E5B820DCF87C00554A4F /* SharkORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkORM.m; sourceTree = "<group>"; };
@@ -108,7 +117,6 @@
 		3A71E5BC20DCF87C00554A4F /* SRKRelationship.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKRelationship.m; sourceTree = "<group>"; };
 		3A71E5BE20DCF87C00554A4F /* SRKJoinObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKJoinObject.m; sourceTree = "<group>"; };
 		3A71E5BF20DCF87C00554A4F /* SRKQueryProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKQueryProfile.m; sourceTree = "<group>"; };
-		3A71E5C020DCF87C00554A4F /* SRKFTSQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKFTSQuery.m; sourceTree = "<group>"; };
 		3A71E5C120DCF87C00554A4F /* SRKJoinObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKJoinObject.h; sourceTree = "<group>"; };
 		3A71E5C220DCF87C00554A4F /* SRKQueryAsyncHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKQueryAsyncHandler.m; sourceTree = "<group>"; };
 		3A71E5C320DCF87C00554A4F /* SRKQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKQuery.m; sourceTree = "<group>"; };
@@ -118,8 +126,6 @@
 		3A71E5C720DCF87C00554A4F /* SRKDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKDefinitions.h; sourceTree = "<group>"; };
 		3A71E5C820DCF87C00554A4F /* SRKGlobals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKGlobals.m; sourceTree = "<group>"; };
 		3A71E5C920DCF87C00554A4F /* SRKError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKError.m; sourceTree = "<group>"; };
-		3A71E5CB20DCF87C00554A4F /* FTSRegistry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTSRegistry.m; sourceTree = "<group>"; };
-		3A71E5CC20DCF87C00554A4F /* FTSRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTSRegistry.h; sourceTree = "<group>"; };
 		3A71E5CD20DCF87C00554A4F /* SRKSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKSettings.m; sourceTree = "<group>"; };
 		3A71E5CF20DCF87C00554A4F /* SRKTransaction+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRKTransaction+Private.h"; sourceTree = "<group>"; };
 		3A71E5D020DCF87C00554A4F /* SRKContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKContext.m; sourceTree = "<group>"; };
@@ -158,8 +164,6 @@
 		3A71E5F520DCF87C00554A4F /* SRKCompoundIndex+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRKCompoundIndex+Private.h"; sourceTree = "<group>"; };
 		3A71E5F620DCF87C00554A4F /* SRKIndexProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKIndexProperty.m; sourceTree = "<group>"; };
 		3A71E5F720DCF87D00554A4F /* SRKIndexDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKIndexDefinition.m; sourceTree = "<group>"; };
-		3A71E5F920DCF87D00554A4F /* SRKFuzzyStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKFuzzyStore.h; sourceTree = "<group>"; };
-		3A71E5FA20DCF87D00554A4F /* SRKFuzzyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKFuzzyStore.m; sourceTree = "<group>"; };
 		3A71E5FC20DCF87D00554A4F /* SRKEventHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKEventHandler.m; sourceTree = "<group>"; };
 		3A71E5FD20DCF87D00554A4F /* SRKEventRegistryObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKEventRegistryObject.m; sourceTree = "<group>"; };
 		3A71E5FE20DCF87D00554A4F /* SRKEventBlockHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKEventBlockHolder.h; sourceTree = "<group>"; };
@@ -209,10 +213,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A499B0120E14CE000086B7D /* Frameworks */ = {
+		3A21769120E3DE8C0063B0B1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A21769920E3DE8C0063B0B1 /* SharkORM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,11 +238,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3A499B0820E14CE000086B7D /* SharkORMTests */ = {
+		3A21769520E3DE8C0063B0B1 /* SharkORMTests */ = {
 			isa = PBXGroup;
 			children = (
-				3A499B0920E14CE000086B7D /* SharkORMTests.m */,
-				3A499B0B20E14CE000086B7D /* Info.plist */,
+				3A21769620E3DE8C0063B0B1 /* SharkORMTests.swift */,
+				3A21769820E3DE8C0063B0B1 /* Info.plist */,
+				3A21769F20E3EF6B0063B0B1 /* DataObjects.swift */,
+				3A2176A520E3F2A50063B0B1 /* SchemaTest.swift */,
 			);
 			path = SharkORMTests;
 			sourceTree = "<group>";
@@ -246,7 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				3A71E5B420DCF87C00554A4F /* SharkORM */,
-				3A499B0820E14CE000086B7D /* SharkORMTests */,
+				3A21769520E3DE8C0063B0B1 /* SharkORMTests */,
 				3A71E50120DCF65800554A4F /* Products */,
 				3A2175FD20E230E30063B0B1 /* Frameworks */,
 			);
@@ -256,8 +263,8 @@
 			isa = PBXGroup;
 			children = (
 				3A71E50020DCF65800554A4F /* libSharkORM.a */,
-				3A499B0420E14CE000086B7D /* SharkORMTests.xctest */,
 				3A2175F520E230A20063B0B1 /* SharkORM.framework */,
+				3A21769420E3DE8C0063B0B1 /* SharkORMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -290,7 +297,6 @@
 				3A71E5C720DCF87C00554A4F /* SRKDefinitions.h */,
 				3A71E5C820DCF87C00554A4F /* SRKGlobals.m */,
 				3A71E5C920DCF87C00554A4F /* SRKError.m */,
-				3A71E5CA20DCF87C00554A4F /* FTS */,
 				3A71E5CD20DCF87C00554A4F /* SRKSettings.m */,
 				3A71E5CE20DCF87C00554A4F /* Transactions */,
 				3A71E5D520DCF87C00554A4F /* SRKLazyLoader.h */,
@@ -301,7 +307,6 @@
 				3A71E5EC20DCF87C00554A4F /* Registry */,
 				3A71E5F120DCF87C00554A4F /* SRKRelationship.h */,
 				3A71E5F220DCF87C00554A4F /* Indexing */,
-				3A71E5F820DCF87D00554A4F /* FuzzyStore */,
 				3A71E5FB20DCF87D00554A4F /* Events */,
 				3A71E60320DCF87D00554A4F /* SRKGlobals.h */,
 				3A71E60420DCF87D00554A4F /* SRKSQLiteHandle.m */,
@@ -314,7 +319,6 @@
 			children = (
 				3A71E5BE20DCF87C00554A4F /* SRKJoinObject.m */,
 				3A71E5BF20DCF87C00554A4F /* SRKQueryProfile.m */,
-				3A71E5C020DCF87C00554A4F /* SRKFTSQuery.m */,
 				3A71E5C120DCF87C00554A4F /* SRKJoinObject.h */,
 				3A71E5C220DCF87C00554A4F /* SRKQueryAsyncHandler.m */,
 				3A71E5C320DCF87C00554A4F /* SRKQuery.m */,
@@ -322,15 +326,6 @@
 				3A71E5C520DCF87C00554A4F /* SRKQueryAsyncHandler+Private.h */,
 			);
 			path = Queries;
-			sourceTree = "<group>";
-		};
-		3A71E5CA20DCF87C00554A4F /* FTS */ = {
-			isa = PBXGroup;
-			children = (
-				3A71E5CB20DCF87C00554A4F /* FTSRegistry.m */,
-				3A71E5CC20DCF87C00554A4F /* FTSRegistry.h */,
-			);
-			path = FTS;
 			sourceTree = "<group>";
 		};
 		3A71E5CE20DCF87C00554A4F /* Transactions */ = {
@@ -391,15 +386,6 @@
 				3A71E5F720DCF87D00554A4F /* SRKIndexDefinition.m */,
 			);
 			path = Indexing;
-			sourceTree = "<group>";
-		};
-		3A71E5F820DCF87D00554A4F /* FuzzyStore */ = {
-			isa = PBXGroup;
-			children = (
-				3A71E5F920DCF87D00554A4F /* SRKFuzzyStore.h */,
-				3A71E5FA20DCF87D00554A4F /* SRKFuzzyStore.m */,
-			);
-			path = FuzzyStore;
 			sourceTree = "<group>";
 		};
 		3A71E5FB20DCF87D00554A4F /* Events */ = {
@@ -500,21 +486,22 @@
 			productReference = 3A2175F520E230A20063B0B1 /* SharkORM.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3A499B0320E14CE000086B7D /* SharkORMTests */ = {
+		3A21769320E3DE8C0063B0B1 /* SharkORMTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A499B1020E14CE000086B7D /* Build configuration list for PBXNativeTarget "SharkORMTests" */;
+			buildConfigurationList = 3A21769C20E3DE8C0063B0B1 /* Build configuration list for PBXNativeTarget "SharkORMTests" */;
 			buildPhases = (
-				3A499B0020E14CE000086B7D /* Sources */,
-				3A499B0120E14CE000086B7D /* Frameworks */,
-				3A499B0220E14CE000086B7D /* Resources */,
+				3A21769020E3DE8C0063B0B1 /* Sources */,
+				3A21769120E3DE8C0063B0B1 /* Frameworks */,
+				3A21769220E3DE8C0063B0B1 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3A21769B20E3DE8C0063B0B1 /* PBXTargetDependency */,
 			);
 			name = SharkORMTests;
 			productName = SharkORMTests;
-			productReference = 3A499B0420E14CE000086B7D /* SharkORMTests.xctest */;
+			productReference = 3A21769420E3DE8C0063B0B1 /* SharkORMTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		3A71E4FF20DCF65800554A4F /* libSharkORM */ = {
@@ -540,13 +527,14 @@
 		3A71E4F820DCF65800554A4F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = SharkSync;
 				TargetAttributes = {
 					3A2175F420E230A20063B0B1 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
-					3A499B0320E14CE000086B7D = {
+					3A21769320E3DE8C0063B0B1 = {
 						CreatedOnToolsVersion = 9.4.1;
 					};
 					3A71E4FF20DCF65800554A4F = {
@@ -567,8 +555,8 @@
 			projectRoot = "";
 			targets = (
 				3A71E4FF20DCF65800554A4F /* libSharkORM */,
-				3A499B0320E14CE000086B7D /* SharkORMTests */,
 				3A2175F420E230A20063B0B1 /* SharkORM */,
+				3A21769320E3DE8C0063B0B1 /* SharkORMTests */,
 			);
 		};
 /* End PBXProject section */
@@ -582,7 +570,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A499B0220E14CE000086B7D /* Resources */ = {
+		3A21769220E3DE8C0063B0B1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -599,11 +587,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A499B0020E14CE000086B7D /* Sources */ = {
+		3A21769020E3DE8C0063B0B1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A499B0A20E14CE000086B7D /* SharkORMTests.m in Sources */,
+				3A2176A020E3EF6B0063B0B1 /* DataObjects.swift in Sources */,
+				3A21769720E3DE8C0063B0B1 /* SharkORMTests.swift in Sources */,
+				3A2176A620E3F2A50063B0B1 /* SchemaTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,13 +610,11 @@
 				3A71E63520DCF87D00554A4F /* SRKTransactionInfo.m in Sources */,
 				3A71E63720DCF87D00554A4F /* SRKEncryptedObject.m in Sources */,
 				3A71E65120DCF87D00554A4F /* SRKSyncOptions.m in Sources */,
-				3A71E62D20DCF87D00554A4F /* SRKFTSQuery.m in Sources */,
 				3A71E62820DCF87D00554A4F /* SharkSchemaManager.swift in Sources */,
 				3A71E64A20DCF87D00554A4F /* SRKEventBlockHolder.m in Sources */,
 				3A71E63920DCF87D00554A4F /* SRKRawResults.m in Sources */,
 				3A71E65520DCF87D00554A4F /* SyncRequest.swift in Sources */,
 				3A71E65A20DCF87D00554A4F /* SharkSyncChange.swift in Sources */,
-				3A71E63220DCF87D00554A4F /* FTSRegistry.m in Sources */,
 				3A71E65020DCF87D00554A4F /* SRKSharkSyncAccountSettings.m in Sources */,
 				3A71E63C20DCF87D00554A4F /* SRKStringObject.m in Sources */,
 				3A71E65C20DCF87D00554A4F /* SharkSyncGroup.swift in Sources */,
@@ -650,7 +638,6 @@
 				3A71E64120DCF87D00554A4F /* SRKRegistryEntry.m in Sources */,
 				3A71E64820DCF87D00554A4F /* SRKEventRegistryObject.m in Sources */,
 				3A71E64020DCF87D00554A4F /* SRKObject.m in Sources */,
-				3A71E64620DCF87D00554A4F /* SRKFuzzyStore.m in Sources */,
 				3A71E65B20DCF87D00554A4F /* SRKDefunctObject.m in Sources */,
 				3A71E64E20DCF87D00554A4F /* SyncComms.swift in Sources */,
 				3A71E63420DCF87D00554A4F /* SRKContext.m in Sources */,
@@ -676,6 +663,11 @@
 			isa = PBXTargetDependency;
 			target = 3A71E4FF20DCF65800554A4F /* libSharkORM */;
 			targetProxy = 3A21760020E2318D0063B0B1 /* PBXContainerItemProxy */;
+		};
+		3A21769B20E3DE8C0063B0B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A2175F420E230A20063B0B1 /* SharkORM */;
+			targetProxy = 3A21769A20E3DE8C0063B0B1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -738,38 +730,46 @@
 			};
 			name = Release;
 		};
-		3A499B1120E14CE000086B7D /* Debug */ = {
+		3A21769D20E3DE8C0063B0B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3D9YGMP46N;
 				INFOPLIST_FILE = SharkORMTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sharksyn.SharkORMTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.sharksync.SharkORMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		3A499B1220E14CE000086B7D /* Release */ = {
+		3A21769E20E3DE8C0063B0B1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3D9YGMP46N;
 				INFOPLIST_FILE = SharkORMTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sharksyn.SharkORMTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.sharksync.SharkORMTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -952,11 +952,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A499B1020E14CE000086B7D /* Build configuration list for PBXNativeTarget "SharkORMTests" */ = {
+		3A21769C20E3DE8C0063B0B1 /* Build configuration list for PBXNativeTarget "SharkORMTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3A499B1120E14CE000086B7D /* Debug */,
-				3A499B1220E14CE000086B7D /* Release */,
+				3A21769D20E3DE8C0063B0B1 /* Debug */,
+				3A21769E20E3DE8C0063B0B1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -73,7 +73,7 @@
 		NSObject* primaryKey = ((SRKEntity*)parentEntity).reflectedPrimaryKeyValue;
 		if (primaryKey) {
 			
-			return [[[self.relationship.targetClass query] whereWithFormat:@"%@=%@ AND %@", self.relationship.targetProperty,primaryKey, self.relationship.restrictions] fetch];
+			return [[[self.relationship.targetClass query] where:@" ? = ? AND ?" parameters:@[ self.relationship.targetProperty,primaryKey, self.relationship.restrictions]] fetch];
 			
 		} else {
 			NSArray* weakArray = [NSArray new];

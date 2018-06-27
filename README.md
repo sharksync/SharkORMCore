@@ -100,7 +100,7 @@ Example:
 ```
 ```swift
 // Swift
-override class func ignoredProperties() -> [Any] {
+override class func ignoredProperties() -> [String] {
    return ["age","name"]
 }
 ```

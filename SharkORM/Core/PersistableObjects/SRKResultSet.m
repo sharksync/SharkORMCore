@@ -97,7 +97,7 @@
 				}
 				
 				SRKQuery* query = [_query.classDecl query];
-				query = [query whereWithFormat:@"Id IN (%@)", primaryKeysToRetrieve];
+				query = [query where:@"Id IN (?)" parameters:@[primaryKeysToRetrieve]];
 				
 				if (_query.joins.count) {
 					for (SRKJoinObject* join in _query.joins) {
@@ -110,7 +110,7 @@
 				}
 				
 				if (_query.orderBy) {
-					query = [query orderBy:_query.orderBy];
+					query = [query order:_query.orderBy];
 				}
 				
 				SRKResultSet* results = nil;

@@ -109,7 +109,7 @@ typedef NSImage XXImage;
     // adds a visibility group to the table, to be sent with all sync requests.
     // AH originally wanted the groups to be set per class, but i think it's better that a visibility group be across all classes, much good idea for the dev
     
-    if (![[[[SRKSyncGroup query] whereWithFormat:@"groupName = %@", [self MD5FromString:visibilityGroup]] limit:1] count]) {
+    if (![[[[SRKSyncGroup query] where:@"groupName = ?" parameters:@[[self MD5FromString:visibilityGroup]]] limit:1] count]) {
         SRKSyncGroup* newGroup = [SRKSyncGroup new];
         newGroup.groupName = [self MD5FromString:visibilityGroup];
         newGroup.tidemark_uuid = @"";
@@ -122,7 +122,7 @@ typedef NSImage XXImage;
     
     NSString* vg = [self MD5FromString:visibilityGroup];
     
-    [[[[[SRKSyncGroup query] whereWithFormat:@"groupName = %@", vg]  limit:1] fetch] removeAll];
+    [[[[[SRKSyncGroup query] where:@"groupName = ?" parameters:@[vg]]  limit:1] fetch] remove];
     
     // now we need to remove all the records which were part of this visibility group
     for (SRKSyncRegisteredClass* c in [[SRKSyncRegisteredClass query] fetch]) {
@@ -254,7 +254,7 @@ typedef NSImage XXImage;
 
 + (void)queueObject:(SRKSyncObject *)object withChanges:(NSMutableDictionary*)changes withOperation:(SharkSyncOperation)operation inHashedGroup:(NSString*)group {
     
-    if (![[[SRKSyncRegisteredClass query] whereWithFormat:@"className = %@", [object.class description]] count]) {
+    if (![[[SRKSyncRegisteredClass query] where:@"className = ?" parameters:@[[object.class description]]] count]) {
         SRKSyncRegisteredClass* c = [SRKSyncRegisteredClass new];
         c.className = [object.class description];
         [c commit];

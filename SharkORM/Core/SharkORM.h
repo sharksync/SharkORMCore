@@ -33,7 +33,6 @@
 @class SRKEvent;
 @class SRKEventHandler;
 @class SRKQuery;
-@class SRKFTSQuery;
 @class SRKTransaction;
 @class SRKRawResults;
 @class SRKIndexProperty;
@@ -73,8 +72,7 @@ void SRKFailTransaction(void);
  * @param param The string value that you wish to use within a LIKE condition.
  * @return A newly created string which is formatted as a valid LIKE statement, e.g. @" '%{value}%' ".
  */
-NSString* makeLikeParameter(NSString* param);
-
+NSString* makeLikeParameter(NSString* param) DEPRECATED_MSG_ATTRIBUTE("No need to make a 'LIKE' parameter, as we have swapped to '?' for parameters we can now just use standard SQL syntax");
 typedef enum : int {
     SRK_RELATE_ONETOONE = 1,
     SRK_RELATE_ONETOMANY = 2,
@@ -234,7 +232,7 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  * @param (NSString*) The query to be performed.
  * @return (SRKRawResults*);
  */
-+(SRKRawResults*)rawQuery:(NSString*)sql;
++(SRKRawResults* _Nonnull)rawQuery:(NSString*)sql;
 /**
  * Allows the developer to specify a block to be executed against all INSERT events.
  *
@@ -481,8 +479,6 @@ typedef void(^SRKCommitOptionsBlock)(void);
 
 /// Creates a SRKQuery object for this class
 + (SRKQuery*)query;
-/// Create a Full Text Search query object for this class
-+ (SRKQuery*)fts;
 /// Returns the first object where th eproperty is matched with value
 + (id)firstMatchOf:(NSString*)property withValue:(id)value;
 
@@ -496,7 +492,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
 // @property (nonatomic, strong)   NSNumber* Id; /* Removed */
 
 /// Joined data, if set this contains the results of the query from adjoining tables
-@property (nonatomic, strong, readonly)   NSDictionary<NSString*,NSObject*>* joinedResults;
+@property (nonatomic, strong, readonly)   NSDictionary<NSString*,id>* joinedResults;
 
 /// commit options class of type SRKCommitOptions.  Allows the developer to specify object specific options when commiting and removing entities from the data store.
 @property (nonatomic, strong)   SRKCommitOptions* commitOptions;
@@ -522,7 +518,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
  * @param (NSDictionary*)initialValues, in the format [<property as string>:<value as Any>]
  * @return SRKObject*.  A new object with the pre-populated values.
  */
-- (instancetype)initWithDictionary:(NSDictionary<NSString*,NSObject*>*)initialValues;
+- (instancetype)initWithDictionary:(NSDictionary<NSString*,id>*)initialValues;
 /**
  * Creates a new dictionary [Field:Value] of the current values stored within the object.
  *
@@ -593,12 +589,6 @@ typedef void(^SRKCommitOptionsBlock)(void);
  */
 - (void)entityDidDelete;
 /**
- * Used to indicate to SharkORM that you wish to create a FTS virtual table using the return values.
- *
- * @return (NSArray*) Return an array of property names, these will be used to create the virtual table, any inserts into the fts table will also automatically contain these values.
- */
-+ (NSArray<NSString*>*)FTSParametersForEntity;
-/**
  * Used to indicate to SharkORM that this class does not raise Insert, Update & Delete event notifications.
  *
  * @return (BOOL) If true is returned, event notifications will not be raised.  This will significantly improve the speed of I,U & D operations.
@@ -630,7 +620,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
  *
  * @return (NSDictionary*) return a dictionary object to specify default values for properties.
  */
-+ (NSDictionary<NSString*,NSObject*>*)defaultValuesForEntity;
++ (NSDictionary<NSString*,id>*)defaultValuesForEntity;
 /**
  * Specifies the properties on the class that should remain encrypted within the database. NOTE: you will not be able to perform optimised queries on these encrypted properties so they should only be used to encrypt sensitive data that would not normally be searched on.
 
@@ -832,7 +822,7 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
 /**
  * Specifies the WHERE clause of the query statement, and the parameters to be bound to the statement.
   *
- * @param where contains the parameters for the query, e.g. where:@" forename = %@ "
+ * @param where contains the parameters for the query, e.g. where:@" forename = ? "
  * @param parameters is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
  * @return SRKQuery* this value can be discarded or used to nest queries together to form clear and concise statements.
  */
@@ -1009,39 +999,6 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @return (double)  sum of the specified parameter across all results.
  */
 - (double)sumOf:(NSString*)propertyName;
-
-@end
-
-/**
- * A SRKFTS class is used to construct a Full Text Search object and return results from the virtual table.
- *
- *
- */
-@interface SRKFTSQuery : SRKQuery
-
-/* parameter methods */
-/**
- * Specifies the WHERE clause of the full text search query statement
- *
- * @param (NSString*)where contains the parameters for the query, e.g. " forename MATCH 'Adrian' "
- * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
- */
-- (SRKQuery*)where:(NSString*)where;
-/**
- * Specifies the WHERE clause of the query statement, using a standard format string.
- *
- * @param (NSString*)where contains the parameters for the query, e.g. where:@" forename MATCH %@ ", @"Adrian"
- * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
- */
-- (SRKQuery*)whereWithFormat:(NSString*)format,...;
-/**
- * Specifies the WHERE clause of the query statement, using a standard format string.
- *
- * @param (NSString*)where contains the parameters for the query, e.g. where:@" forename MATCH %@ "
- * @param (NSArray*)params is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
- * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
- */
-- (SRKQuery*)whereWithFormat:(NSString*)format withParameters:(NSArray*)params;
 
 @end
 

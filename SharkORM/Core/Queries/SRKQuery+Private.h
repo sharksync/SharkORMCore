@@ -43,7 +43,6 @@
 @property BOOL									excludeResultsFromCache;
 @property BOOL									recordPerformance;
 @property BOOL									lightweightObject;
-@property BOOL									fts;
 @property (atomic, strong) NSArray*				prefetch;
 @property (nonatomic, retain) SRKQueryProfile*	performance;
 @property int									queryType;
