@@ -74,6 +74,10 @@ typedef enum : int {
     return config;
 }
 
++(SRKSettings*)settings {
+    return [[SRKGlobals sharedObject] settings];
+}
+
 + (BOOL)NumberIsFraction:(NSNumber *)number {
     double dValue = [number doubleValue];
     if (dValue < 0.0)
@@ -82,7 +86,7 @@ typedef enum : int {
         return (dValue != floor(dValue));
 }
 
-+ (void)migrateFromLegacyCoredataFile:(NSString*)filePath tables:(NSArray*)tablesToConvert {
++ (void)migrateFromLegacyCoredataFile:(NSString*)filePath tables:(NSArray<NSString*>*)tablesToConvert {
     
     NSMutableDictionary* results = [NSMutableDictionary new];
     

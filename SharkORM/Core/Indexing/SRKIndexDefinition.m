@@ -31,7 +31,19 @@
 
 @implementation SRKIndexDefinition
 
-- (void)addIndexWithProperties: (SRKIndexProperty *)indexProperty, ... NS_REQUIRES_NIL_TERMINATION {
+- (instancetype)init:(NSArray<NSString*>* _Nonnull)properties {
+    
+    self = [super init];
+    if (self) {
+        for (NSString* prop in properties) {
+            [self add:prop order:SRKIndexSortOrderAscending];
+        }
+    }
+    return self;
+    
+}
+
+- (SRKIndexDefinition*)addIndexWithProperties: (SRKIndexProperty *)indexProperty, ... NS_REQUIRES_NIL_TERMINATION {
     if (!_components) {
         _components = [NSMutableArray new];
     }
@@ -61,22 +73,36 @@
     if (!found) {
         [_components addObject:index];
     }
-}
-
-- (void)addIndexForProperty:(NSString *)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder {
     
-    SRKIndexProperty * property = [[SRKIndexProperty alloc] initWithName:propertyName andOrder:propOrder];
-    
-    [self addIndexWithProperties:property, nil];
+    return self;
     
 }
 
-- (void)addIndexForProperty:(NSString *)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder secondaryProperty:(NSString *)secProperty secondaryOrder:(enum SRKIndexSortOrder)secOrder {
+- (SRKIndexDefinition*)add:(NSString*)property order:(enum SRKIndexSortOrder)order {
+    
+    SRKIndexProperty * newProperty = [[SRKIndexProperty alloc] initWithName:property andOrder:order];
+    
+    [self addIndexWithProperties:newProperty, nil];
+    
+    return self;
+    
+}
+
+- (SRKIndexDefinition*)addIndexForProperty:(NSString *)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder {
+    
+    return [self add:propertyName order:propOrder];
+    
+}
+
+- (SRKIndexDefinition*)addIndexForProperty:(NSString *)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder secondaryProperty:(NSString *)secProperty secondaryOrder:(enum SRKIndexSortOrder)secOrder {
+    
     SRKIndexProperty * property = [[SRKIndexProperty alloc] initWithName:propertyName andOrder:propOrder];
     SRKIndexProperty * secondProperty = [[SRKIndexProperty alloc] initWithName:secProperty andOrder:secOrder];
     
     [self addIndexWithProperties:property, secondProperty, nil];
 
+    return self;
+    
 }
 
 - (void)generateIndexesForTable:(NSString*)tableName forEntity:(NSString*)entity {

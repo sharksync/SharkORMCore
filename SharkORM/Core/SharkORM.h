@@ -107,8 +107,8 @@ typedef enum : int {
 
 /**
  * Contains performance anaylsis information about a query that was performed by the system.
-
  */
+
 @interface SRKQueryProfile : NSObject
 
 /// The number of rows returned by the query.
@@ -125,7 +125,7 @@ typedef enum : int {
 @property  (nonatomic, strong) NSArray* queryPlan;
 /// The query that was generated from the SRKQuery object.
 @property  (nonatomic, strong) NSString* sqlQuery;
-/// The compiled query with teh parameters included.
+/// The compiled query with the parameters included.
 @property  (nonatomic, strong) NSString* compiledQuery;
 /// The resultant output from the query.
 @property  (nonatomic, strong) NSObject* resultsSet;
@@ -149,7 +149,7 @@ typedef enum : int {
 
 @optional
 
-/// Retuen a SharkORMSettings* object to override the default settings, this will be asked for on initialization of the first persistable object.
+/// Return a SharkORMSettings* object to override the default settings, this will be asked for on initialization of the first persistable object.
 - (SRKSettings*)getCustomSettings;
 /// This method is called when the database has been successfully opened.
 - (void)databaseOpened;
@@ -195,6 +195,12 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  */
 +(SRKConfiguration*)setStartupConfiguration:(SRKConfigurationBlock)configBlock;
 /**
+ * Contains the r/w settings for the ORM.  Developers can set the properties directly as opposed to having to respond to the delegate method
+ *
+ * @return SRKSettings*, settings object.
+ */
++(SRKSettings*)settings;
+/**
  * Used to pre-create and update any persistable classes, SharkORM by default, will only create or update the schema with objects when they are first referenced.  If there is a requirement to ensure that a collection of classes are created before they are used anywhere then you can use this method.  This is not required in most scenarios.
  *
  * @param (Class)class Array of Class* objects to be initialized
@@ -208,7 +214,7 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  * @param tablesToConvert Array of SRKEntity class names to convert from the original CoreData file provided.
  * @return void
  */
-+(void)migrateFromLegacyCoredataFile:(NSString*)filePath tables:(NSArray*)tablesToConvert;
++(void)migrateFromLegacyCoredataFile:(NSString*)filePath tables:(NSArray<NSString*>*)tablesToConvert;
 /**
  * Opens or creates a database file from the given name.
  *
@@ -279,11 +285,11 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  *      SRKIndexDefinition
  */
 
-enum SRKIndexSortOrder {
+enum SRKIndexSortOrder : NSUInteger {
     SRKIndexSortOrderAscending = 1,
     SRKIndexSortOrderDescending = 2,
     SRKIndexSortOrderNoCase = 3
-    };
+};
 
 /**
  * Used to define a set of indexes within a persitable object.
@@ -291,22 +297,32 @@ enum SRKIndexSortOrder {
 @interface SRKIndexDefinition : NSObject {
     
 }
+/** Convenience method to specify an array of property names to automatically create and maintain indexes on.  All indexes default to Ascending.
+ */
+- (instancetype)init:(NSArray<NSString*>* _Nonnull)properties;
 /**
- * Adds the definition for an index on a given object.
+ * *DEPRICATED* Adds the definition for an index on a given object.
  *
  * @param propertyName The name of the property that you wish to index.
  * @param propertyOrder The order of the index, specified as a value of enum SRKIndexSortOrder.
- * @return void
+ * @return SRKIndexDefinition
  */
-- (void)addIndexForProperty:(NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder;
-
+- (SRKIndexDefinition*)addIndexForProperty:(NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder DEPRECATED_MSG_ATTRIBUTE("Use 'add:order:' instead");
+/**
+ * Creates an index for the named property
+ *
+ * @param property, The name of the property that you wish to index.
+ * @param order, the order of the index, specified as a value of enum SRKIndexSortOrder.
+ * @return SRKIndexDefinition
+ */
+- (SRKIndexDefinition*)add:(NSString*)property order:(enum SRKIndexSortOrder)order;
 /**
  * Adds the definition for a compound index with an indefinite number of properties
  *
  * @param indexProperty A list of properties that makes up the compound index
  * @return void
  */
-- (void)addIndexWithProperties: (SRKIndexProperty *)indexProperty, ...;
+- (SRKIndexDefinition*)addIndexWithProperties: (SRKIndexProperty *)indexProperty, ...;
 
 /**
  * Adds a composite index on a given object with a sub index on an additional property.
@@ -317,7 +333,7 @@ enum SRKIndexSortOrder {
  * @param secondaryOrder The order of the index, specified as a value of enum SRKIndexSortOrder.
  * @return void
  */
-- (void)addIndexForProperty:(NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder secondaryProperty:(NSString*)secProperty secondaryOrder:(enum SRKIndexSortOrder)secOrder;
+- (SRKIndexDefinition*)addIndexForProperty:(NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder secondaryProperty:(NSString*)secProperty secondaryOrder:(enum SRKIndexSortOrder)secOrder;
 
 @end
 

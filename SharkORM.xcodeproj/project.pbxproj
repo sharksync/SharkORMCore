@@ -94,6 +94,8 @@
 		3A2175A920E180890063B0B1 /* SharkORM.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = SharkORM.modulemap; sourceTree = "<group>"; };
 		3A2175F520E230A20063B0B1 /* SharkORM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SharkORM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A21762520E248870063B0B1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A21762720E399280063B0B1 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = SOURCE_ROOT; };
+		3A21762820E399350063B0B1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		3A499B0420E14CE000086B7D /* SharkORMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharkORMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A499B0920E14CE000086B7D /* SharkORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SharkORMTests.m; sourceTree = "<group>"; };
 		3A499B0B20E14CE000086B7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -263,9 +265,11 @@
 		3A71E5B420DCF87C00554A4F /* SharkORM */ = {
 			isa = PBXGroup;
 			children = (
+				3A21762720E399280063B0B1 /* CHANGELOG.md */,
+				3A21762820E399350063B0B1 /* README.md */,
+				3A71E5B520DCF87C00554A4F /* Core */,
 				3A21762520E248870063B0B1 /* Info.plist */,
 				3A2175A920E180890063B0B1 /* SharkORM.modulemap */,
-				3A71E5B520DCF87C00554A4F /* Core */,
 				3A71E60520DCF87D00554A4F /* SQLite */,
 				3A71E60A20DCF87D00554A4F /* Sync */,
 			);
