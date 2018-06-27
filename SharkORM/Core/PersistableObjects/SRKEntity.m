@@ -225,7 +225,7 @@ static int obCount=0;
 }
 
 /* fts parameters */
-+ (NSArray*)FTSParametersForEntity {
++ (NSArray<NSString*>*)FTSParametersForEntity {
     return nil;
 }
 
@@ -247,7 +247,7 @@ static int obCount=0;
     return nil;
 }
 
-+ (NSArray*)ignoredProperties {
++ (NSArray<NSString*>*)ignoredProperties {
     return nil;
 }
 
@@ -1581,7 +1581,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
     
 }
 
-- (id)initWithDictionary:(NSDictionary *)initialValues {
+- (instancetype)initWithDictionary:(NSDictionary<NSString*,NSObject*>*)initialValues {
     
     Class originalClass = ((SRKEntity*)self).class;
     self = [originalClass new];
@@ -1594,8 +1594,31 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
     
 }
 
+- (NSDictionary<NSString*, NSObject*>*)asDictionary {
+    
+    NSMutableDictionary* newDic = [NSMutableDictionary new];
+    for (NSString* f in self.fieldNames) {
+        [newDic setObject:[self getField:f] forKey:f];
+    }
+    
+    return [NSDictionary dictionaryWithDictionary:newDic];
+    
+}
+
+- (instancetype)clone {
+    
+    SRKEntity* newObject = [self.class new];
+    for (NSString* f in self.fieldNames) {
+        if (![f isEqualToString:SRK_DEFAULT_PRIMARY_KEY_NAME]) {
+            [newObject setField:f value:[self getField:f]];
+        }
+    }
+    return newObject;
+    
+}
+
 + (instancetype)objectWithPrimaryKeyValue:(NSObject*)priKeyValue {
-    return [[[[((SRKEntity*)self).class query] whereWithFormat:@"Id = %@", priKeyValue] limit:1] fetch].firstObject;
+    return [[[[((SRKEntity*)self).class query] where:@"Id = ?" parameters:@[priKeyValue]] limit:1] fetch].firstObject;
 }
 
 - (id)init {

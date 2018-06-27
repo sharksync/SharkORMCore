@@ -44,6 +44,53 @@
 	return self;
 }
 
+- (SRKQuery*)where:(NSString * _Nonnull)statement parameters:(NSArray * _Nonnull)parameters {
+    
+    // build up all the components finding all the '?' chars
+    NSMutableArray *characters = [[NSMutableArray alloc] initWithCapacity:[statement length]];
+    for (int i=0; i < [statement length]; i++) {
+        NSString *ichar  = [NSString stringWithFormat:@"%c", [statement characterAtIndex:i]];
+        [characters addObject:ichar];
+    }
+    
+    NSString* format = @"";
+    NSMutableArray* params = [NSMutableArray new];
+    int i=0;
+    for (__strong NSString* c in characters) {
+        if ([c isEqualToString:@"?"]) {
+            
+            // this is a parameter
+            id p = [parameters objectAtIndex:i];
+            i++;
+            
+            if ([p isKindOfClass:[NSArray class]] || [p isKindOfClass:[NSSet class]]) {
+                
+                // now strecth out the '?' to match the number of items within the set/array. e.g. ? -> ?,?,?,?,?
+                NSMutableArray* placeHolders = [NSMutableArray new];
+                for (id o in p) {
+                    [placeHolders addObject:@"?"];
+                    [params addObject:o];
+                }
+                
+                c = [placeHolders componentsJoinedByString:@","];
+                
+            } else {
+                
+                [params addObject:p];
+                
+            }
+            
+        }
+        format = [format stringByAppendingString:c];
+    }
+    
+    self.whereClause = format;
+    self.parameters = [NSArray arrayWithArray:params];
+    
+    return self;
+    
+}
+
 - (SRKQuery*)whereWithFormat:(NSString*)format withParameters:(NSArray*)params {
 	
 	/* loop through the arguments and convert the objects into the correct format */
@@ -347,15 +394,19 @@
 	return self;
 }
 
-- (SRKQuery*)orderBy:(NSString*)order {
+- (SRKQuery*)order:(NSString*)order {
     if ([self.orderBy isEqualToString:SRK_DEFAULT_ORDER]) {
         self.orderBy = order;
     } else {
         // we need to append this ORDER BY to an existing one
         self.orderBy = [NSString stringWithFormat:@"%@,%@", self.orderBy, order];
     }
-	
-	return self;
+    
+    return self;
+}
+
+- (SRKQuery*)orderBy:(NSString*)order {
+    return [self order:order];
 }
 
 - (SRKQuery*)orderByDescending:(NSString*)order {
@@ -422,6 +473,22 @@
 	return [SharkORM getValueFromQuery:query inClass:self.classDecl];
 	
 }
+
+- (SRKObject*)first {
+    
+    /* look to see if this request is a FTS query, if so change the restrictions to focus on the fts table */
+    /* the original query may look like name MATCH 'adrian', but these object will be in an fts_ table */
+    
+    self.limitOf = 1;
+    
+    NSArray* results = [[SharkORM new] fetchEntitySetForQuery:self];
+    if (!results.count) {
+        return nil;
+    }
+    return [results objectAtIndex:0];
+    
+}
+
 
 - (SRKResultSet*)fetch {
 	

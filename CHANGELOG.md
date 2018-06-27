@@ -13,6 +13,10 @@ return SRKIndexDefinition().add("name", order: SRKIndexSortOrderAscending).add("
 ```Swift
 return SRKIndexDefinition(["name","age"])
 ```
++ (change) Imporoved interface to queries. Added `first` method to allow you to get only the first object in the result set.
++ (change) added `clone` to create a new object with all of the property values copied across
++ (change) added `asDictionary` method to export an object as a dictionary to make interfacing with network calls far easier.
+
 
 ## v2.1.3 - Mar 31, 2017
 

@@ -148,8 +148,8 @@
 	return o;
 }
 
-- (BOOL)removeAll {
-	
+- (BOOL)remove {
+    
     __block BOOL succeeded = YES;
     
     [SRKTransaction transaction:^{
@@ -167,6 +167,12 @@
     }];
     
     return succeeded;
+    
+}
+
+- (BOOL)removeAll {
+	
+    return [self remove];
 	
 }
 

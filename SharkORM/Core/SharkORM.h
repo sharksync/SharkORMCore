@@ -380,12 +380,15 @@ typedef void(^SRKEventRegistrationBlock)(SRKEvent* event);
  * Contains the results from a fetch call to a SRKQuery object.  Subclassed from an NSArray, it contains two extra methods, removeAll & commitAll.  These are optimized to complete within a single transaction.
  */
 @interface SRKResultSet : NSArray
+
+
+- (BOOL)removeAll DEPRECATED_MSG_ATTRIBUTE("use method 'remove' instead");
 /**
  * Removes all objects contained within the array from the database.  This is done within a single transaction to optimize performance.
  *
  * @return BOOL, true if operation was successful.
  */
-- (BOOL)removeAll;
+- (BOOL)remove;
 
 @end
 
@@ -479,7 +482,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
 /// Creates a SRKQuery object for this class
 + (SRKQuery*)query;
 /// Create a Full Text Search query object for this class
-+(SRKQuery*)fts;
++ (SRKQuery*)fts;
 /// Returns the first object where th eproperty is matched with value
 + (id)firstMatchOf:(NSString*)property withValue:(id)value;
 
@@ -493,7 +496,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
 // @property (nonatomic, strong)   NSNumber* Id; /* Removed */
 
 /// Joined data, if set this contains the results of the query from adjoining tables
-@property (nonatomic, strong, readonly)   NSDictionary* joinedResults;
+@property (nonatomic, strong, readonly)   NSDictionary<NSString*,NSObject*>* joinedResults;
 
 /// commit options class of type SRKCommitOptions.  Allows the developer to specify object specific options when commiting and removing entities from the data store.
 @property (nonatomic, strong)   SRKCommitOptions* commitOptions;
@@ -519,10 +522,21 @@ typedef void(^SRKCommitOptionsBlock)(void);
  * @param (NSDictionary*)initialValues, in the format [<property as string>:<value as Any>]
  * @return SRKObject*.  A new object with the pre-populated values.
  */
-- (instancetype)initWithDictionary:(NSDictionary*)initialValues;
+- (instancetype)initWithDictionary:(NSDictionary<NSString*,NSObject*>*)initialValues;
+/**
+ * Creates a new dictionary [Field:Value] of the current values stored within the object.
+ *
+ * @return (NSDictionary<NSString*, NSObject*>*).  All the field values for the current object.
+ */
+- (NSDictionary<NSString*, NSObject*>*)asDictionary;
+/**
+ * Clones the values of an object into a new container
+ *
+ * @return SRKObject*.  A new object with the pre-populated values.
+ */
+- (instancetype)clone;
 /**
  * Removes the object form the database
-
  *
  * @return BOOL returns NO if the operation failed to complete.
  */
@@ -583,7 +597,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
  *
  * @return (NSArray*) Return an array of property names, these will be used to create the virtual table, any inserts into the fts table will also automatically contain these values.
  */
-+ (NSArray*)FTSParametersForEntity;
++ (NSArray<NSString*>*)FTSParametersForEntity;
 /**
  * Used to indicate to SharkORM that this class does not raise Insert, Update & Delete event notifications.
  *
@@ -610,26 +624,26 @@ typedef void(^SRKCommitOptionsBlock)(void);
  *
  * @return (NSArray*) Return an array of property names, these will be used to create an ignore list.
  */
-+ (NSArray*)ignoredProperties;
++ (NSArray<NSString*>*)ignoredProperties;
 /**
  * Used to specify the default values for a new entity, where the "key" is the property name and the "value" is a standard NSObject such as NSNumber / NSString / NSNull / NSData / NSArray.  Every new object will automatically have these properties set with their default values.  When adding a new property to a SRKObject class, SharkORM will create a new column.  This column will be populated with the default value as provided by this method.
  *
  * @return (NSDictionary*) return a dictionary object to specify default values for properties.
  */
-+ (NSDictionary*)defaultValuesForEntity;
++ (NSDictionary<NSString*,NSObject*>*)defaultValuesForEntity;
 /**
  * Specifies the properties on the class that should remain encrypted within the database. NOTE: you will not be able to perform optimised queries on these encrypted properties so they should only be used to encrypt sensitive data that would not normally be searched on.
 
  *
  * @return and (NSArray*) of property names that SharkORM should keep encrypted in the database.
  */
-+ (NSArray*)encryptedPropertiesForClass;
++ (NSArray<NSString*>*)encryptedPropertiesForClass;
 /**
  * Specifies the properties on the class that should be unique within the datastore, before a commit operation is performed a test is made to ensure another record with those exact properties does not already exist.  Commit will return NO/FALSE if there is an existant match.
  *
  * @return and (NSArray*) of property names that SharkORM should test for uniqueness.
  */
-+ (NSArray*)uniquePropertiesForClass;
++ (NSArray<NSString*>*)uniquePropertiesForClass;
 /**
  * Specifies the database file that this particular class will be persisted in.  This enables you to have your persistable classes spanning many different files.
 
@@ -805,7 +819,7 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @param (NSString*)where contains the parameters for the query, e.g. where:@" forename = %@ ", @"Adrian"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)whereWithFormat:(NSString*)format,...;
+- (SRKQuery*)whereWithFormat:(NSString*)format,... DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
 /**
  * Specifies the WHERE clause of the query statement, using a standard format string.
 
@@ -814,7 +828,15 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @param (NSArray*)params is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)whereWithFormat:(NSString*)format withParameters:(NSArray*)params;
+- (SRKQuery*)whereWithFormat:(NSString*)format withParameters:(NSArray*)params DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
+/**
+ * Specifies the WHERE clause of the query statement, and the parameters to be bound to the statement.
+  *
+ * @param where contains the parameters for the query, e.g. where:@" forename = %@ "
+ * @param parameters is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
+ * @return SRKQuery* this value can be discarded or used to nest queries together to form clear and concise statements.
+ */
+- (SRKQuery*)where:(NSString* _Nonnull)statement parameters:(NSArray* _Nonnull)parameters;
 /**
  * Limits the number of results retuned from the query
 
@@ -823,14 +845,15 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
 - (SRKQuery*)limit:(int)limit;
+
+- (SRKQuery*)orderBy:(NSString*)order DEPRECATED_MSG_ATTRIBUTE("use 'order:' instead.");
 /**
  * Specifies the property by which the results will be ordered.  This can contain multiple, comma separated, values.
-
  *
  * @param (NSString*)order a comma separated string for use to order the results, e.g. "surname, forename"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)orderBy:(NSString*)order;
+- (SRKQuery*)order:(NSString*)order;
 /**
  * Specifies the property by which the results will be ordered in decending value.  This can contain multiple, comma separated, values.
 
@@ -881,6 +904,12 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
 - (SRKResultSet*)fetch;
+/**
+ * Performs the query and returns the first match found form the query.
+ *
+ * @return (SRKObject*) results of the query.
+ */
+- (SRKObject* _Nullable)first;
 /**
  * Performs the query and returns the results, you will always get an object back even if there are no results.  All the objects will be deflated lightweight objects, who's values will only be retrieved upon accessing the properties.  If configured, the object can "hang on" to the object to stop repeat queries, but the objects will then use more memory.
 
