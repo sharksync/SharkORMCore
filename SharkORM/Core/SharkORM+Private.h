@@ -21,10 +21,6 @@
 //    SOFTWARE.
 
 
-
-#ifndef SharkORM_Private_h
-#define SharkORM_Private_h
-
 #import "SharkORM.h"
 #import "SQLite3.h"
 #import "SRKDefinitions.h"
@@ -55,4 +51,3 @@
 
 @end
 
-#endif /* SharkORM_Private_h */

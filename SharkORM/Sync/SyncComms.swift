@@ -25,29 +25,30 @@ import Foundation
 public class SyncComms {
     
     func selectEndpoint() -> URL {
-        return URL(string:"http://api.sharksync.io:5000/sync")!
+        return URL(string:"http://api.testingallthethings.net/Api/Sync")!
     }
     
-    func request(payload: [String:Any]) -> [String:Any]? {
+    func request(payload: SyncRequestViewModel) -> SyncResponseViewModel {
         
-        var request = URLRequest(url: selectEndpoint(), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 30)
+        var request = URLRequest(url: selectEndpoint(), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 60)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         
         // serialise the dictionary to JSON
-        request.httpBody = try? JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
+        request.httpBody = try? JSONEncoder().encode(payload)
         
         let session = URLSession.shared
         let (data, response, error) = session.synchronousDataTask(with: request)
         if error != nil || response == nil || response?.statusCode != 200 || data == nil {
-            return nil
+            return SyncResponseViewModel()
         }
         
         // convert the body back to an object
-        let responseObject = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? [String:Any]
-        
-        return responseObject!
-        
+        do {
+            return try JSONDecoder().decode(SyncResponseViewModel.self, from: data!)
+        } catch let error {
+            return SyncResponseViewModel()
+        }
     }
     
 }

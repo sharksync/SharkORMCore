@@ -22,82 +22,110 @@
 
 import Foundation
 
+class SyncResponseViewModel : Codable {
+    
+    var Groups: [SyncObjectGroupResponseViewModel] = []
+    var Errors: String?
+    var Success: Bool?
+    
+}
+
+class SyncObjectGroupResponseViewModel : Codable {
+    
+    var Group: String?
+    var Tidemark: Int64?
+    var Changes: [SyncObjectChangeViewModel] = []
+    
+}
+
+class SyncObjectGroupViewModel : Codable {
+    
+    var Group: String?
+    var Tidemark: String?
+    
+}
+
+class SyncObjectChangeViewModel : Codable {
+    
+    var Path: String?
+    var Value: String?
+    var SecondsAgo: Double?
+    var Group: String?
+    var Operation: Int?
+    var Modified: String?
+    
+}
+
+class SyncRequestViewModel : Codable {
+    
+    var app_id: String?
+    var device_id: String?
+    var app_api_access_key: String?
+    var changes: [SyncObjectChangeViewModel] = []
+    var groups: [SyncObjectGroupViewModel] = []
+    
+}
+
 class SyncRequest {
     
-    var changes: [SharkSyncChange] = []
-    var groups: [SRKSyncGroup] = []
+    var changes: [SharkSyncChange]?
     
-    func requestObject() -> [String: Any] {
+    func generateRequestObject() -> SyncRequestViewModel {
         
-        var requestData: [String: Any] = [:]
-        
-        // embed the current session information
-        requestData["app_id"] = SharkSync.sharedObject().applicationKey
-        requestData["device_id"] = SharkSync.sharedObject().deviceId
-        requestData["app_api_access_key"] = SharkSync.sharedObject().accountKeyKey
-        
-        // debug/testing
-        requestData["device_id"] = "9e4ac6a5-aac3-4362-b530-0be53a9e6619"
+        let r = SyncRequestViewModel()
+        r.app_id = SharkSync.sharedObject().applicationKey
+        r.device_id = SharkSync.sharedObject().deviceId
+        r.app_api_access_key = SharkSync.sharedObject().accountKeyKey
         
         // pull out a reasonable amount of writes to be sent to the server
-        let changeResults = (SharkSyncChange.query().limit(100).order("timestamp").fetch()) as! [SharkSyncChange]
+        let changeResults = (SharkSyncChange.query().limit(200).order("timestamp").fetch()) as! [SharkSyncChange]
         self.changes = changeResults
         
-        // now add in the changes, and the tidemarks
-        var changes: [[String:Any]] = []
-        
         for change: SharkSyncChange in changeResults {
+            
             let secondsAgo = Date().timeIntervalSince1970 - change.timestamp
-            changes.append(["path": change.path ?? "",
-                            "value": change.value ?? "",
-                            "secondsAgo": secondsAgo,
-                            "group": change.recordGroup ?? "",
-                            "operation": change.action]
-            )
+            let c = SyncObjectChangeViewModel()
+            c.Group = change.recordGroup
+            c.Path = change.path
+            c.SecondsAgo = secondsAgo
+            c.Value = change.value
+            r.changes.append(c)
+            
         }
-        
-        requestData["changes"] = changes
         
         // now select out the data groups to poll for, oldest first
-        let groupResults = SRKSyncGroup.query().limit(100).order("last_polled").fetch() as! [SRKSyncGroup]
-        self.groups = groupResults
-        var groups: [[String:Any]] = []
+        let groupResults = SRKSyncGroup.query().limit(200).order("last_polled").fetch() as! [SRKSyncGroup]
         for group: SRKSyncGroup in groupResults {
-            groups.append(["group": group.groupName ?? "", "tidemark": group.tidemark_uuid ?? NSNull()])
+            let g = SyncObjectGroupViewModel()
+            g.Group = group.groupName
+            g.Tidemark = group.tidemark_uuid
+            r.groups.append(g)
         }
-        requestData["groups"] = groups
-        return requestData
+        
+        return r
+        
     }
     
-    func requestResponded(_ response: [String: Any], changes: [SharkSyncChange]) {
-        
-        /* clear down the transmitted data, as we know it arrived okay */
-        for o in changes {
-            o.remove()
-        }
+    func handleResponse(_ response: SyncResponseViewModel, changes: [SharkSyncChange]?) {
         
         // check for success/error
-        if !((response["Success"] as? Bool) ?? false) {
-            // there was an error from the service, so we need to bail at this point
+        if response.Success == false {
             return
         }
         
         // remove the outbound items
-        for change in changes {
+        for change in changes ?? [] {
             change.remove()
         }
         
         /* now work through the response */
-        for group in (response["Groups"] as? [[String:Any]]) ?? [] {
+        
+        for group in response.Groups {
             
-            let groupName = group["Group"] as! String
-            let tidemark = group["Tidemark"] as! String
-            
-            // now pull out the changes for this group
-            for change in (group["Changes"] as? [[String:Any]]) ?? [] {
+            for change in group.Changes {
                 
-                let path = (change["Path"] as? String ?? "//").components(separatedBy: "/")
-                let value = change["Value"] as? String ?? ""
+                let path = (change.Path ?? "//").components(separatedBy: "/")
+                let value = change.Value ?? ""
                 let record_id = path[0]
                 let class_name = path[1]
                 let property = path[2]
@@ -129,7 +157,7 @@ class SyncRequest {
                             if (fieldName == property) {
                                 targetObject?.setField(property, value: decryptedValue as! NSObject)
                                 if targetObject?.getRecordGroup() == nil {
-                                    targetObject?.setRecordVisibilityGroup(groupName)
+                                    targetObject?.setRecordVisibilityGroup(group.Group!)
                                 }
                                 if targetObject?.__commitRaw(withObjectChainNoSync: nil) != nil {
                                     decryptedValue = nil
@@ -151,7 +179,7 @@ class SyncRequest {
                         
                     }
                     else {
-                        if SRKDefunctObject.query().where("defunctId = %@", parameters: [record_id]).count() > 0 {
+                        if SRKDefunctObject.query().where("defunctId = ?", parameters: [record_id]).count() > 0 {
                             // defunct object, do nothing
                         }
                         else {
@@ -166,7 +194,7 @@ class SyncRequest {
                                     if (fieldName == property) {
                                         targetObject!.setField(property, value: decryptedValue as! NSObject)
                                         if targetObject?.getRecordGroup() == nil {
-                                            targetObject?.setRecordVisibilityGroup(groupName)
+                                            targetObject?.setRecordVisibilityGroup(group.Group!)
                                         }
                                         if targetObject!.__commitRaw(withObjectChainNoSync: nil) {
                                             decryptedValue = nil
@@ -185,20 +213,19 @@ class SyncRequest {
                             }
                         }
                     }
-                    
                 }
                 
             }
             
             // now update the group tidemark so as to not receive this data again
-            let grp = SRKSyncGroup.groupWithEncodedName(groupName)
+            let grp = SRKSyncGroup.groupWithEncodedName(group.Group!)
             if grp != nil {
-                grp!.tidemark_uuid = tidemark
+                grp!.tidemark_uuid = "\(group.Tidemark)"
                 grp!.last_polled = NSNumber(value: Date().timeIntervalSince1970)
                 grp!.commit()
             }
             
         }
     }
-    
 }
+

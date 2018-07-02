@@ -82,12 +82,8 @@ class SyncNetwork : NSObject {
     func makeRequest(_ r: SyncRequest) {
         
         let s = SyncComms()
-        let response = s.request(payload: r.requestObject())
-        if response != nil {
-            r.requestResponded(response!, changes: r.changes)
-        } else {
-            
-        }
+        let response =
+        r.handleResponse(s.request(payload: r.generateRequestObject()), changes: r.changes)
         
     }
     

@@ -55,24 +55,16 @@ void SRKFailTransaction(void);
 
 /**
  * Creates a new transaction for the current executing thread, which then executes the transaction block that was passed into the object, if the transaction failes in anypart the database changes are rolled back and the rollback block is called.
-
+ 
  *
  * @param transaction:(SRKTransactionBlockBlock*)transaction A valid SRKTransactionBlockBlock, any objects which are commited to removed within this block, will be dealt with within a single transaction.
  * @param withRollback:(SRKTransactionBlockBlock*)rollback A valid SRKTransactionBlockBlock, if executed all database objects are restored back to their previos state before the transaction began.
  * @return void
  */
-+ (void)transaction:(SRKTransactionBlockBlock)transaction withRollback:(SRKTransactionBlockBlock)rollback;
++ (void)transaction:(nullable SRKTransactionBlockBlock)transaction withRollback:(nullable SRKTransactionBlockBlock)rollback;
 
 @end
 
-/**
- * Create a valid 'LIKE' parameter neatly, SharkORM will then recognise this and construct the correct parameter within the query.
-
- *
- * @param param The string value that you wish to use within a LIKE condition.
- * @return A newly created string which is formatted as a valid LIKE statement, e.g. @" '%{value}%' ".
- */
-NSString* makeLikeParameter(NSString* param) DEPRECATED_MSG_ATTRIBUTE("No need to make a 'LIKE' parameter, as we have swapped to '?' for parameters we can now just use standard SQL syntax");
 typedef enum : int {
     SRK_RELATE_ONETOONE = 1,
     SRK_RELATE_ONETOMANY = 2,
@@ -80,24 +72,24 @@ typedef enum : int {
 
 /**
  * Settings class for SharkORM, returned from the delegate when the engine is initialized.
-
+ 
  */
 @interface SRKSettings : NSObject
 
 /// when TRUE all dates are stored within the system as numbers for performance reasons instead of ANSI date strings.
 @property BOOL                      useEpochDates;
 /// The SQLite standard journaling mode that will be used on all connections, the defalut is WAL.
-@property (strong) NSString*        sqliteJournalingMode;
+@property (strong, nullable) NSString*        sqliteJournalingMode;
 /// when TRUE, all objects created will automatically be registered within the default managed object domain, this will save the developer from having to manually add the parameter to any queries or individually to objects.
 @property BOOL                      defaultManagedObjects;
 /// the default managed object domain used for new objects when defaultManagedObjects is set to TRUE.  If not set, this defaults to "SharkORM.default"
-@property (strong)                  NSString* defaultObjectDomain;
+@property (strong, nullable)                  NSString* defaultObjectDomain;
 /// The folder path that the database file should be created in not including the filename, this must be a valid path capable of being turned into an NSURL.
-@property (nonatomic,strong)        NSString* databaseLocation;
+@property (nonatomic,strong, nullable)        NSString* databaseLocation;
 /// the filename of the default database file, e.g. "MyApplication".  SharkORM will automatically append ."db" onto the end of the filename.  Not including the path to the file.
-@property (nonatomic,strong)        NSString* defaultDatabaseName;
+@property (nonatomic,strong, nullable)        NSString* defaultDatabaseName;
 /// this is the AES256 encryption key that is used when properties are specified as encryptable.
-@property (strong)                  NSString* encryptionKey;
+@property (strong, nullable)                  NSString* encryptionKey;
 /// tells SharkORM if you wish to retain values for lightweight objects once they are done with.
 @property BOOL                      retainLightweightObjects;
 
@@ -120,26 +112,26 @@ typedef enum : int {
 /// The time (in ms) it took to gain an appropriate lock on the database to perform the query, this is often symptomatic of many competing threads looking to gain exclusive access to a table at the same time.
 @property  int lockObtainTime;
 /// The query plan as returned by SQLite
-@property  (nonatomic, strong) NSArray* queryPlan;
+@property  (nonatomic, strong, nullable) NSArray* queryPlan;
 /// The query that was generated from the SRKQuery object.
-@property  (nonatomic, strong) NSString* sqlQuery;
+@property  (nonatomic, strong, nullable) NSString* sqlQuery;
 /// The compiled query with the parameters included.
-@property  (nonatomic, strong) NSString* compiledQuery;
+@property  (nonatomic, strong, nullable) NSString* compiledQuery;
 /// The resultant output from the query.
-@property  (nonatomic, strong) NSObject* resultsSet;
+@property  (nonatomic, strong, nullable) NSObject* resultsSet;
 
 @end
 
 /**
  * Ad error raised by SharkORM, gives you the message from the core, as well as the SQL query that was generated and caused the fault.
-
+ 
  */
 @interface SRKError : NSObject
 
 /// The error message that was returned from the core of SharkORM.
-@property  (nonatomic, retain)  NSString* errorMessage;
+@property  (nonatomic, retain, nullable)  NSString* errorMessage;
 /// The query that caused the error.
-@property  (nonatomic, retain)  NSString* sqlQuery;
+@property  (nonatomic, retain, nullable)  NSString* sqlQuery;
 
 @end
 
@@ -148,31 +140,33 @@ typedef enum : int {
 @optional
 
 /// Return a SharkORMSettings* object to override the default settings, this will be asked for on initialization of the first persistable object.
-- (SRKSettings*)getCustomSettings;
+- (nonnull SRKSettings*)getCustomSettings;
 /// This method is called when the database has been successfully opened.
 - (void)databaseOpened;
 /// This method is called when an error occours within SharkORM.
-- (void)databaseError:(SRKError*)error;
+- (void)databaseError:(nonnull SRKError*)error;
 /// This method, if implemented, will profile all queries that are performed within SharkORM.  Use the queryTime property within the SRKQueryProfile* object to filter out only queries that do not meet your performance requirements.
-- (void)queryPerformedWithProfile:(SRKQueryProfile*)profile;
+- (void)queryPerformedWithProfile:(nonnull SRKQueryProfile*)profile;
 /// An object that did not support a valid encoding mechanisum was attempted to be written to the database.  It is therefore passed to the delegate method for encoding.  You must return an NSData object that can be stored and later re-hydrated by a call to "decodeUnsupportedColumnValueForColumn"
-- (NSData*)encodeUnsupportedColumnValueForColumn:(NSString*)column inEntity:(NSString*)entity value:(id)value;
+- (nullable NSData*)encodeUnsupportedColumnValueForColumn:(nonnull NSString*)column inEntity:(nonnull NSString*)entity value:(nonnull id)value;
 /// Previously an object was persistsed that was not supported by SharkORM, and "encodeUnsupportedColumnValueForColumn" was called to encode it into a NSData* object, this metthod will pass back a hydrated object created from the NSData*
-- (id)decodeUnsupportedColumnValueForColumn:(NSString*)column inEntity:(NSString*)entity data:(NSData*)value;
+- (nullable id)decodeUnsupportedColumnValueForColumn:(nonnull NSString*)column inEntity:(nonnull NSString*)entity data:(nonnull NSData*)value;
 
 @end
 
 typedef void(^SRKConfigurationBlock)(void);
 @interface SRKConfiguration : NSObject {
 }
-@property (copy) SRKConfigurationBlock startupBlock;
+@property (copy, nullable) SRKConfigurationBlock startupBlock;
 @end
 
 /**
  * SharkORM class, always accessed through class methods, there is only ever a single instance of the database engine.
  */
 
+NS_ASSUME_NONNULL_BEGIN
 typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
+NS_ASSUME_NONNULL_END
 
 @interface SharkORM : NSObject {
     
@@ -184,27 +178,27 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  * @param aDelegate Must be an initialised object that implements the SRKDelegate protocol.
  * @return void
  */
-+(void)setDelegate:(id<SRKDelegate>)delegate;
++(void)setDelegate:(nullable id<SRKDelegate>)delegate;
 /**
  * Sets the SRKConfigurationBlock object for the ORM, allowing the ORM to startup across multiple threads and block entity access until the initial setup has been completed.
  *
  * @param configBlock, this usually contains the "setDelegate" and "openDatabase" instructions.
  * @return SRKConfiguration*, used to allow the startup of Swift/Storyboard apps that have a lifecycle that starts in advance of the AppDelegate methods
  */
-+(SRKConfiguration*)setStartupConfiguration:(SRKConfigurationBlock)configBlock;
++(nonnull SRKConfiguration*)setStartupConfiguration:(nonnull SRKConfigurationBlock)configBlock;
 /**
  * Contains the r/w settings for the ORM.  Developers can set the properties directly as opposed to having to respond to the delegate method
  *
  * @return SRKSettings*, settings object.
  */
-+(SRKSettings*)settings;
++(nonnull SRKSettings*)settings;
 /**
  * Used to pre-create and update any persistable classes, SharkORM by default, will only create or update the schema with objects when they are first referenced.  If there is a requirement to ensure that a collection of classes are created before they are used anywhere then you can use this method.  This is not required in most scenarios.
  *
  * @param (Class)class Array of Class* objects to be initialized
  * @return void
  */
-+(void)setupTablesFromClasses:(Class)classDecl,...;
++(void)setupTablesFromClasses:(nullable Class)classDecl,...;
 /**
  * Migrates data from an existing CoreData database file into SharkORM, only the supplied object names are converted.  NOTE: If successful, the original file will be removed by the routine.  Existing Objects within the supplied list will be cleared from the database.
  *
@@ -212,48 +206,48 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
  * @param tablesToConvert Array of SRKEntity class names to convert from the original CoreData file provided.
  * @return void
  */
-+(void)migrateFromLegacyCoredataFile:(NSString*)filePath tables:(NSArray<NSString*>*)tablesToConvert;
++(void)migrateFromLegacyCoredataFile:(nonnull NSString*)filePath tables:(nonnull NSArray<NSString*>*)tablesToConvert;
 /**
  * Opens or creates a database file from the given name.
  *
  * @param dbName The name of the database to open or create, this is not the full path to the object. By default the path defaults to the applcations Documents directory. If you wish to modify the path the file will exist in, then you will need to implement the "getCustomSettings" delegate method and return an alternative path.
  * @return void;
  */
-+(void)openDatabaseNamed:(NSString*)dbName;
++(void)openDatabaseNamed:(nonnull NSString*)dbName;
 /**
  * Closes a database file of the given name, flushing all caches, and invalidating any objects that are still in use within the system.
  *
  * @return void;
  */
-+(void)closeDatabaseNamed:(NSString*)dbName;
++(void)closeDatabaseNamed:(nonnull NSString*)dbName;
 /**
  * Performs a free text query and returns the result as a INSERT INTO object.
  *
  * @param (NSString*) The query to be performed.
  * @return (SRKRawResults*);
  */
-+(SRKRawResults* _Nonnull)rawQuery:(NSString*)sql;
++(SRKRawResults* _Nonnull)rawQuery:(nonnull NSString*)sql;
 /**
  * Allows the developer to specify a block to be executed against all INSERT events.
  *
  * @param (^SRKGlobalEventCallback) The block to be executed when the ORM has instigated any INSERT.
  * @return void;
  */
-+(void)setInsertCallbackBlock:(SRKGlobalEventCallback)callback;
++(void)setInsertCallbackBlock:(nullable SRKGlobalEventCallback)callback;
 /**
  * Allows the developer to specify a block to be executed against all UPDATE events.
  *
  * @param (^SRKGlobalEventCallback) The block to be executed when the ORM has instigated any UPDATE.
  * @return void;
  */
-+(void)setUpdateCallbackBlock:(SRKGlobalEventCallback)callback;
++(void)setUpdateCallbackBlock:(nullable SRKGlobalEventCallback)callback;
 /**
  * Allows the developer to specify a block to be executed against all DELETE events.
  *
  * @param (^SRKGlobalEventCallback) The block to be executed when the ORM has instigated any DELETE.
  * @return void;
  */
-+(void)setDeleteCallbackBlock:(SRKGlobalEventCallback)callback;
++(void)setDeleteCallbackBlock:(nullable SRKGlobalEventCallback)callback;
 
 @end
 
@@ -264,18 +258,17 @@ typedef void(^SRKGlobalEventCallback)(SRKEntity* entity);
 @interface SRKRelationship : NSObject {
     
 }
-
-@property Class                             sourceClass;
-@property Class                             targetClass;
-@property (nonatomic, strong) NSString*     sourceProperty;
-@property (nonatomic, strong) NSString*     targetProperty;
-@property (nonatomic, strong) NSString*     linkTable;
-@property (nonatomic, strong) NSString*     linkSourceField;
-@property (nonatomic, strong) NSString*     linkTargetField;
-@property (nonatomic, strong) NSString*     entityPropertyName;
-@property (nonatomic, strong) NSString*     order;
-@property (nonatomic, strong) NSString*     restrictions;
-@property int                               relationshipType;
+@property Class                                       sourceClass;
+@property Class                                       targetClass;
+@property (nonatomic, strong, nullable) NSString*     sourceProperty;
+@property (nonatomic, strong, nullable) NSString*     targetProperty;
+@property (nonatomic, strong, nullable) NSString*     linkTable;
+@property (nonatomic, strong, nullable) NSString*     linkSourceField;
+@property (nonatomic, strong, nullable) NSString*     linkTargetField;
+@property (nonatomic, strong, nullable) NSString*     entityPropertyName;
+@property (nonatomic, strong, nullable) NSString*     order;
+@property (nonatomic, strong, nullable) NSString*     restrictions;
+@property int                                         relationshipType;
 
 @end
 
@@ -297,7 +290,7 @@ enum SRKIndexSortOrder : NSUInteger {
 }
 /** Convenience method to specify an array of property names to automatically create and maintain indexes on.  All indexes default to Ascending.
  */
-- (instancetype)init:(NSArray<NSString*>* _Nonnull)properties;
+- (nonnull instancetype)init:(nonnull NSArray<NSString*>*)properties;
 /**
  * *DEPRICATED* Adds the definition for an index on a given object.
  *
@@ -305,7 +298,7 @@ enum SRKIndexSortOrder : NSUInteger {
  * @param propertyOrder The order of the index, specified as a value of enum SRKIndexSortOrder.
  * @return SRKIndexDefinition
  */
-- (SRKIndexDefinition*)addIndexForProperty:(NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder DEPRECATED_MSG_ATTRIBUTE("Use 'add:order:' instead");
+- (nonnull SRKIndexDefinition*)addIndexForProperty:(nonnull NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder DEPRECATED_MSG_ATTRIBUTE("Use 'add:order:' instead");
 /**
  * Creates an index for the named property
  *
@@ -313,14 +306,14 @@ enum SRKIndexSortOrder : NSUInteger {
  * @param order, the order of the index, specified as a value of enum SRKIndexSortOrder.
  * @return SRKIndexDefinition
  */
-- (SRKIndexDefinition*)add:(NSString*)property order:(enum SRKIndexSortOrder)order;
+- (nonnull SRKIndexDefinition*)add:(nonnull NSString*)property order:(enum SRKIndexSortOrder)order;
 /**
  * Adds the definition for a compound index with an indefinite number of properties
  *
  * @param indexProperty A list of properties that makes up the compound index
  * @return void
  */
-- (SRKIndexDefinition*)addIndexWithProperties: (SRKIndexProperty *)indexProperty, ...;
+- (nonnull SRKIndexDefinition*)addIndexWithProperties: (nullable SRKIndexProperty *)indexProperty, ...;
 
 /**
  * Adds a composite index on a given object with a sub index on an additional property.
@@ -331,7 +324,7 @@ enum SRKIndexSortOrder : NSUInteger {
  * @param secondaryOrder The order of the index, specified as a value of enum SRKIndexSortOrder.
  * @return void
  */
-- (SRKIndexDefinition*)addIndexForProperty:(NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder secondaryProperty:(NSString*)secProperty secondaryOrder:(enum SRKIndexSortOrder)secOrder;
+- (nonnull SRKIndexDefinition*)addIndexForProperty:(nonnull NSString*)propertyName propertyOrder:(enum SRKIndexSortOrder)propOrder secondaryProperty:(nonnull NSString*)secProperty secondaryOrder:(enum SRKIndexSortOrder)secOrder;
 
 @end
 
@@ -343,7 +336,7 @@ enum SRKIndexSortOrder : NSUInteger {
  *
  * @return (Class) The original SRKEntity derrived class definition on which this object is partially based.
  */
-+ (Class)classIsPartialImplementationOfClass;
++ (nonnull Class)classIsPartialImplementationOfClass;
 
 @end
 
@@ -353,7 +346,7 @@ enum SharkORMEvent {
     SharkORMEventDelete = 4,
 };
 
-typedef void(^SRKEventRegistrationBlock)(SRKEvent* event);
+typedef void(^SRKEventRegistrationBlock)(SRKEvent* _Nonnull event);
 
 /**
  * If implemented, SRKEventDelegate is used to notify an object that an event has been raised within a SRKEntity.
@@ -367,7 +360,7 @@ typedef void(^SRKEventRegistrationBlock)(SRKEvent* event);
  * @param (SRKEvent*)e The event object that was created from the SharkORM event model.
  * @return void
  */
-- (void)SRKObjectDidRaiseEvent:(SRKEvent*)e;
+- (void)SRKObjectDidRaiseEvent:(nonnull SRKEvent*)e;
 
 @end
 
@@ -402,31 +395,31 @@ typedef     void(^contextExecutionBlock)(void);
 @interface SRKContext : NSObject
 /**
  * Adds an SRKEntity to a context.
-
+ 
  *
  * @param (SRKEntity*)entity The entity to add to the context.
  * @return void
  */
-- (void)addEntityToContext:(SRKEntity*)entity;
+- (void)addEntityToContext:(nonnull SRKEntity*)entity;
 /**
  * Removes an SRKEntity from a context.
-
+ 
  *
  * @param (SRKEntity*)entity The entity to be removed from the context.
  * @return void
  */
-- (void)removeEntityFromContext:(SRKEntity*)entity;
+- (void)removeEntityFromContext:(nonnull SRKEntity*)entity;
 /**
  * Used to test if an object is already a member of this context.
-
+ 
  *
  * @param (SRKObject*)entity The entity to be tested for its presence.
  * @return BOOL returns YES if this object exists in this context.
  */
-- (BOOL)isEntityInContext:(SRKEntity*)entity;
+- (BOOL)isEntityInContext:(nonnull SRKEntity*)entity;
 /**
  * Commits all of the pending changes contained in SRKObject's within the context.
-
+ 
  *
  * @return BOOL returns YES if the operation was successful.
  */
@@ -453,15 +446,15 @@ typedef void(^SRKCommitOptionsBlock)(void);
 /// when TRUE event notifications will be raised for any registered handlers attached to the entity.  Default is TRUE.
 @property BOOL                              triggerEvents;
 /// when populated with an array of child/related entities, these will not be commited or updated when the originating entity is written to or deleted from the data store.  Default is nil.
-@property NSArray*                          ignoreEntities;
+@property (nullable) NSArray*               ignoreEntities;
 /// when TRUE errors will be raised within transactions and posted to the app delegate, when false syntax errors will not raise errors and will not fail a transaction block.  Default is TRUE.
 @property BOOL                              raiseErrors;
 /// when TRUE, the properties of this class object will be reset back to their defaults.  Any blocks that were assigned for post events will also be cleared and their memory released.
 @property BOOL                              resetOptionsAfterCommit;
 /// executed on the calling thread, after an object has been successfully persisted.
-@property (copy) SRKCommitOptionsBlock      postCommitBlock;
+@property (copy, nullable) SRKCommitOptionsBlock      postCommitBlock;
 /// executed on the calling thread, after an object has been successfully removed.
-@property (copy) SRKCommitOptionsBlock      postRemoveBlock;
+@property (copy, nullable) SRKCommitOptionsBlock      postRemoveBlock;
 
 @end
 
@@ -472,18 +465,22 @@ typedef void(^SRKCommitOptionsBlock)(void);
 
 /**
  * Specifies a persistable class within SharkORM, any properties that are created within a class that is derrived from SRKObject will need to be implemnted using dynamic properties and not synthesized ones.  SharkORM places its own get/set methods to ensure that all values are correct for the storage and column type.
-
+ 
  */
 
 @interface SRKEntity : NSObject <NSCopying>
 
+/// define a method for the description property
++ (nonnull NSString*)description;
+
 /// Creates a SRKQuery object for this class
-+ (SRKQuery*)query;
-/// Returns the first object where th eproperty is matched with value
-+ (id)firstMatchOf:(NSString*)property withValue:(id)value;
++ (nonnull SRKQuery*)query;
+
+/// Returns the first object where the property is matched with value
++ (nullable id)firstMatchOf:(nonnull NSString*)property withValue:(nonnull id)value;
 
 /// The event object for the entire class.
-+ (SRKEventHandler*)eventHandler;
++ (nonnull SRKEventHandler*)eventHandler;
 
 /// The primary key column, this is common and mandatory across all persistable classes.
 /*
@@ -492,10 +489,10 @@ typedef void(^SRKCommitOptionsBlock)(void);
 // @property (nonatomic, strong)   NSNumber* Id; /* Removed */
 
 /// Joined data, if set this contains the results of the query from adjoining tables
-@property (nonatomic, strong, readonly)   NSDictionary<NSString*,id>* joinedResults;
+@property (nonatomic, strong, readonly, nullable)   NSDictionary<NSString*,id>* joinedResults;
 
 /// commit options class of type SRKCommitOptions.  Allows the developer to specify object specific options when commiting and removing entities from the data store.
-@property (nonatomic, strong)   SRKCommitOptions* commitOptions;
+@property (nonatomic, strong, nullable)   SRKCommitOptions* commitOptions;
 
 /**
  * Initialises a new instance of the object, if an object already exists with the specified primary key then you will get that object back, if not you will net a new object with the primary key specified already.
@@ -503,7 +500,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
  * @param (NSObject*)priKeyValue The primary key value to look up an existing object
  * @return SRKObject* Either an existing or new class.
  */
-- (instancetype)initWithPrimaryKeyValue:(NSObject*)priKeyValue;
+- (nonnull instancetype)initWithPrimaryKeyValue:(nonnull id)priKeyValue DEPRECATED_MSG_ATTRIBUTE("use 'objectWithPrimaryKeyValue:' instead");
 /**
  * Returns an object that matches the primary key value specified, if there is no match, nil is returned.
  
@@ -511,26 +508,26 @@ typedef void(^SRKCommitOptionsBlock)(void);
  * @param (NSObject*)priKeyValue The primary key value to look up an existing object
  * @return SRKObject* Either an existing object or nil.
  */
-+ (instancetype)objectWithPrimaryKeyValue:(NSObject*)priKeyValue;
++ (nullable instancetype)objectWithPrimaryKeyValue:(nonnull id)priKeyValue;
 /**
  * Initialises a new instance of the object, the supplied dictionary will pre-populate the field values.
  *
  * @param (NSDictionary*)initialValues, in the format [<property as string>:<value as Any>]
  * @return SRKObject*.  A new object with the pre-populated values.
  */
-- (instancetype)initWithDictionary:(NSDictionary<NSString*,id>*)initialValues;
+- (nonnull instancetype)initWithDictionary:(nonnull NSDictionary<NSString*,id>*)initialValues;
 /**
  * Creates a new dictionary [Field:Value] of the current values stored within the object.
  *
  * @return (NSDictionary<NSString*, NSObject*>*).  All the field values for the current object.
  */
-- (NSDictionary<NSString*, NSObject*>*)asDictionary;
+- (nonnull NSDictionary<NSString*, NSObject*>*)asDictionary;
 /**
  * Clones the values of an object into a new container
  *
  * @return SRKObject*.  A new object with the pre-populated values.
  */
-- (instancetype)clone;
+- (nonnull instancetype)clone;
 /**
  * Removes the object form the database
  *
@@ -539,7 +536,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
 - (BOOL)remove;
 /**
  * Inserts or updates the object within the database.
-
+ 
  *
  * @return BOOL returns NO if the operation failed to complete.
  */
@@ -548,42 +545,42 @@ typedef void(^SRKCommitOptionsBlock)(void);
 /* these methods should be overloaded in the business object class */
 /**
  * Before SharkORM attempts an operation it will ask the persitable class if it would like to continue with this operation.
-
+ 
  *
  * @return BOOL if YES is returned then SharkORM WILL complete the operation and it is guaranteed to complete.  All pre-requisite checks have been made and the statement compiled before getting to this point.  It is safe to use this method to cascade operations to other classes.
  */
 - (BOOL)entityWillInsert;
 /**
  * Before SharkORM attempts an operation it will ask the persitable class if it would like to continue with this operation.
-
+ 
  *
  * @return BOOL if YES is returned then SharkORM WILL complete the operation and it is guaranteed to complete.  All pre-requisite checks have been made and the statement compiled before getting to this point.  It is safe to use this method to cascade operations to other classes.
  */
 - (BOOL)entityWillUpdate;
 /**
  * Before SharkORM attempts an operation it will ask the persitable class if it would like to continue with this operation.
-
+ 
  *
  * @return BOOL if YES is returned then SharkORM WILL complete the operation and it is guaranteed to complete.  All pre-requisite checks have been made and the statement compiled before getting to this point.  It is safe to use this method to cascade operations to other classes. In the case of delete, you might wish to delete related records, or indeed remove this object from related tables.
  */
 - (BOOL)entityWillDelete;
 /**
  * Called after SharkORM has completed an action.
-
+ 
  *
  * @return void
  */
 - (void)entityDidInsert;
 /**
  * Called after SharkORM has completed an action.
-
+ 
  *
  * @return void
  */
 - (void)entityDidUpdate;
 /**
  * Called after SharkORM has completed an action.
-
+ 
  *
  * @return void
  */
@@ -596,78 +593,78 @@ typedef void(^SRKCommitOptionsBlock)(void);
 + (BOOL)entityDoesNotRaiseEvents;
 /**
  * Used to specify the relationships between objects.  The class will be asked to return the relationship object for a certain property.
-∫
+ ∫
  *
  * @param (NSString*)property The name of the property on the class that SharkORM is asking for clarification of its relationship with other objects.
  * @return (SRKRelationship*) The relationship object should fully exlain the connection between the property and other objects.  If you return nil then SharkORM will assume that this property is not related to other objects and it will be persisted as a normal field.
  */
-+ (SRKRelationship*)relationshipForProperty:(NSString*)property;
++ (nullable SRKRelationship*)relationshipForProperty:(nonnull NSString*)property;
 /**
  * Used to specify the indexes that need to be created and maintained on the given object.
-
+ 
  *
  * @return (SRKIndexDefinition*) return an index object to let SharkORM know which properties need to be indexed for performance reasons.  Primary keys are already indexed, as are any properties that are in fact other persisbale classes.  SharkORM will attempt to automatically calculate indexes from the relationships between your classes, but sometimes you may with to add them manually given feedback form the profiling mechanisum.
  */
-+ (SRKIndexDefinition*)indexDefinitionForEntity;
++ (nullable SRKIndexDefinition*)indexDefinitionForEntity;
 /**
  * Used to indicate to SharkORM that you wish to ignore ceratin properties and to not persiste them.
  *
  * @return (NSArray*) Return an array of property names, these will be used to create an ignore list.
  */
-+ (NSArray<NSString*>*)ignoredProperties;
++ (nullable NSArray<NSString*>*)ignoredProperties;
 /**
  * Used to specify the default values for a new entity, where the "key" is the property name and the "value" is a standard NSObject such as NSNumber / NSString / NSNull / NSData / NSArray.  Every new object will automatically have these properties set with their default values.  When adding a new property to a SRKObject class, SharkORM will create a new column.  This column will be populated with the default value as provided by this method.
  *
  * @return (NSDictionary*) return a dictionary object to specify default values for properties.
  */
-+ (NSDictionary<NSString*,id>*)defaultValuesForEntity;
++ (nullable NSDictionary<NSString*,id>*)defaultValuesForEntity;
 /**
  * Specifies the properties on the class that should remain encrypted within the database. NOTE: you will not be able to perform optimised queries on these encrypted properties so they should only be used to encrypt sensitive data that would not normally be searched on.
-
+ 
  *
  * @return and (NSArray*) of property names that SharkORM should keep encrypted in the database.
  */
-+ (NSArray<NSString*>*)encryptedPropertiesForClass;
++ (nullable NSArray<NSString*>*)encryptedPropertiesForClass;
 /**
  * Specifies the properties on the class that should be unique within the datastore, before a commit operation is performed a test is made to ensure another record with those exact properties does not already exist.  Commit will return NO/FALSE if there is an existant match.
  *
  * @return and (NSArray*) of property names that SharkORM should test for uniqueness.
  */
-+ (NSArray<NSString*>*)uniquePropertiesForClass;
++ (nullable NSArray<NSString*>*)uniquePropertiesForClass;
 /**
  * Specifies the database file that this particular class will be persisted in.  This enables you to have your persistable classes spanning many different files.
-
+ 
  *
  * @return (NSString*) alternative filename for storage of this class.  This will be created within the same folder as the main database.
  */
-+ (NSString*)storageDatabaseForClass;
++ (nullable NSString*)storageDatabaseForClass;
 
 /* partial classes */
-+ (Class)classIsPartialImplementationOfClass;
++ (nullable Class)classIsPartialImplementationOfClass;
 
 /* live objects */
 /**
  * Allows the developer to 'hook' into the events that are raised within SharkORM, useful if you wish to be notified when various actions happen within certain tables.
-
+ 
  *
  * @param registerBlockForEvents:(enum SharkORMEvent)events specifies the events that you are looking to observe, these can be SharkORMEventInsert, SharkORMEventUpdate or SharkORMEventDelete.  They are bitwise properties so can be combined such like SharkORMEventInsert|SharkORMEventUpdate.
  * @param withBlock:(SRKEventRegistrationBlock)block is the block to be executed when the event occours, this will be called on the main thread.
  * @return void
  */
-- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(SRKEventRegistrationBlock)block;
+- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(nonnull SRKEventRegistrationBlock)block;
 /**
  * Allows the developer to 'hook' into the events that are raised within SharkORM, useful if you wish to be notified when various actions happen within certain tables.
-
+ 
  *
  * @param registerBlockForEvents:(enum SharkORMEvent)events specifies the events that you are looking to observe, these can be SharkORMEventInsert, SharkORMEventUpdate or SharkORMEventDelete.  They are bitwise properties so can be combined such like SharkORMEventInsert|SharkORMEventUpdate.
  * @param withBlock:(SRKEventRegistrationBlock)block is the block to be executed when the event occours.
  * @param onMainThread:(BOOL)mainThread is used to specify if you wish the block to be executed on the main thread or the originating thread of the event.  Useful if you are updating UI componets.
  * @return void
  */
-- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(SRKEventRegistrationBlock)block onMainThread:(BOOL)mainThread;
+- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(nonnull SRKEventRegistrationBlock)block onMainThread:(BOOL)mainThread;
 /**
  * Allows the developer to 'hook' into the events that are raised within SharkORM, useful if you wish to be notified when various actions happen within certain tables.
-
+ 
  *
  * @param registerBlockForEvents:(enum SharkORMEvent)events specifies the events that you are looking to observe, these can be SharkORMEventInsert, SharkORMEventUpdate or SharkORMEventDelete.  They are bitwise properties so can be combined such like SharkORMEventInsert|SharkORMEventUpdate.
  * @param withBlock:(SRKEventRegistrationBlock)block is the block to be executed when the event occours.
@@ -675,17 +672,17 @@ typedef void(^SRKCommitOptionsBlock)(void);
  * @param updateSelfWithEvent:(BOOL)updateSelf is used to specify if you wish the object to have its values updated with the changes that raised the event.
  * @return void
  */
-- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(SRKEventRegistrationBlock)block onMainThread:(BOOL)mainThread updateSelfWithEvent:(BOOL)updateSelf;
+- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(nonnull SRKEventRegistrationBlock)block onMainThread:(BOOL)mainThread updateSelfWithEvent:(BOOL)updateSelf;
 /**
  * Allows an object to become a member of a managed object domain, only objects within the same domain recieve value change notifications.
-
+ 
  * @param setManagedObjectDomain:(NSString*)domain  sets the domain that this object is managed within, idetical objects within the same domain will share property values which are updated when the objects are comitted to the store.
  * @return void
  */
-- (void)setManagedObjectDomain:(NSString*)domain;
+- (void)setManagedObjectDomain:(nonnull NSString*)domain;
 /**
  * Clears all event blocks within the object and stops the object from receiving event notifications.
-
+ 
  *
  * @return void
  */
@@ -696,33 +693,33 @@ typedef void(^SRKCommitOptionsBlock)(void);
 @interface SRKObject : SRKEntity <NSCopying>
 
 /// The primary key column, this is common and mandatory across all persistable classes.
-@property (nonatomic, strong)   NSNumber* Id;
+@property (nonatomic, strong, nullable)   NSNumber* Id;
 
 @end
 
 /**
  * Every SRKObject class or instance contains an SRKEventHandler, which the developer can use to monitor activity within the object or class of objects.
-
+ 
  *
  */
 @interface SRKEventHandler : NSObject
 
-- (SRKEventHandler*)entityclass:(Class)entityClass;
+- (nonnull SRKEventHandler*)entityclass:(nonnull Class)entityClass;
 
-@property (nonatomic, weak) id<SRKEventDelegate> delegate;
+@property (nonatomic, weak, nullable) id<SRKEventDelegate> delegate;
 /**
  * Allows the developer to 'hook' into the events that are raised within SharkORM, useful if you wish to be notified when various actions happen within certain tables.
-
+ 
  *
  * @param registerBlockForEvents:(enum SharkORMEvent)events specifies the events that you are looking to observe, these can be SharkORMEventInsert, SharkORMEventUpdate or SharkORMEventDelete.  They are bitwise properties so can be combined such like SharkORMEventInsert|SharkORMEventUpdate.
  * @param withBlock:(SRKEventRegistrationBlock)block is the block to be executed when the event occours.
  * @param onMainThread:(BOOL)mainThread is used to specify if you wish the block to be executed on the main thread or the originating thread of the event.  Useful if you are updating UI componets.
  * @return void
  */
-- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(SRKEventRegistrationBlock)block onMainThread:(BOOL)mainThread;
+- (void)registerBlockForEvents:(enum SharkORMEvent)events withBlock:(nonnull SRKEventRegistrationBlock)block onMainThread:(BOOL)mainThread;
 /**
  * Clears all event blocks within the object and stops the object from receiving event notifications.
-
+ 
  *
  * @return void
  */
@@ -745,13 +742,13 @@ typedef void(^SRKCommitOptionsBlock)(void);
 
 /// The primary key column, this is common and mandatory across all persistable classes.  In this case it is forced to NSString* to allow string primary keys in Swift.
 
-@property (nonatomic, strong)   NSString* Id;
+@property (nonatomic, strong, nullable)   NSString* Id;
 
 @end
 
 /**
  * SRKEvent* is an container class, which is passed to event objects as a parameter.
-
+ 
  *
  */
 @interface SRKEvent : NSObject
@@ -759,9 +756,9 @@ typedef void(^SRKCommitOptionsBlock)(void);
 /// The type of event that triggered the creation of this object
 @property  enum SharkORMEvent               event;
 /// The persistable object that created this event
-@property  (nonatomic, weak) SRKEntity*      entity;
+@property  (nonatomic, weak, nullable) SRKEntity*      entity;
 /// The properties that have changed within this object since its last comital into the database.
-@property  (nonatomic, strong) NSArray*     changedProperties;
+@property  (nonatomic, strong, nullable) NSArray*     changedProperties;
 
 @end
 
@@ -774,7 +771,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
 
 /**
  * Cancels an in progress query.  If called on an expired query that has already completed then it will have no effect.
-
+ 
  *
  * @return void
  */
@@ -782,11 +779,11 @@ typedef void(^SRKCommitOptionsBlock)(void);
 
 @end
 
-typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
+typedef void(^SRKQueryAsyncResponse)(SRKResultSet* _Nonnull results);
 
 /**
  * A SRKQuery class is used to construct a query object and return results from the database.
-
+ 
  *
  *
  */
@@ -796,189 +793,186 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
 /* parameter methods */
 /**
  * Specifies the WHERE clause of the query statement
-
+ 
  *
  * @param (NSString*)where contains the parameters for the query, e.g. " forename = 'Adrian' AND isEmployee = 1 "
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)where:(NSString*)where;
+- (nonnull SRKQuery*)where:(nonnull NSString*)where;
 /**
  * Specifies the WHERE clause of the query statement, using a standard format string.
-
+ 
  *
  * @param (NSString*)where contains the parameters for the query, e.g. where:@" forename = %@ ", @"Adrian"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)whereWithFormat:(NSString*)format,... DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
+- (nonnull SRKQuery*)whereWithFormat:(nonnull NSString*)format,... DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
 /**
  * Specifies the WHERE clause of the query statement, using a standard format string.
-
+ 
  *
  * @param (NSString*)where contains the parameters for the query, e.g. where:@" forename = %@ "
  * @param (NSArray*)params is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)whereWithFormat:(NSString*)format withParameters:(NSArray*)params DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
+- (nonnull SRKQuery*)whereWithFormat:(nonnull NSString*)format withParameters:(nonnull NSArray*)params DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
 /**
  * Specifies the WHERE clause of the query statement, and the parameters to be bound to the statement.
-  *
+ *
  * @param where contains the parameters for the query, e.g. where:@" forename = ? "
  * @param parameters is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
  * @return SRKQuery* this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)where:(NSString* _Nonnull)statement parameters:(NSArray* _Nonnull)parameters;
+- (nonnull SRKQuery*)where:(NSString* _Nonnull)statement parameters:(NSArray* _Nonnull)parameters;
 /**
  * Limits the number of results retuned from the query
-
+ 
  *
  * @param (int)limit the number of results to limit to
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)limit:(int)limit;
+- (nonnull SRKQuery*)limit:(int)limit;
 
-- (SRKQuery*)orderBy:(NSString*)order DEPRECATED_MSG_ATTRIBUTE("use 'order:' instead.");
+- (nonnull SRKQuery*)orderBy:(nonnull NSString*)order DEPRECATED_MSG_ATTRIBUTE("use 'order:' instead.");
 /**
  * Specifies the property by which the results will be ordered.  This can contain multiple, comma separated, values.
  *
  * @param (NSString*)order a comma separated string for use to order the results, e.g. "surname, forename"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)order:(NSString*)order;
+- (nonnull SRKQuery*)order:(nonnull NSString*)order;
 /**
  * Specifies the property by which the results will be ordered in decending value.  This can contain multiple, comma separated, values.
-
+ 
  *
  * @param (NSString*)order a comma separated string for use to order the results, e.g. "surname, forename"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)orderByDescending:(NSString*)order;
+- (nonnull SRKQuery*)orderByDescending:(nonnull NSString*)order;
 /**
  * Specifies the number of results to skip over before starting the aggregation of the results.
-
+ 
  *
  * @param (int)offset the offset value for the query.
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)offset:(int)offset;
+- (nonnull SRKQuery*)offset:(int)offset;
 /**
  * Specifies the number of results to retrieve in a batch, the SRKResultSet is then created using a batch store co-ordinator.
  *
  * @param (int)batchSize the batch size of the query.
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)batchSize:(int)batchSize;
+- (nonnull SRKQuery*)batchSize:(int)batchSize;
 /**
  * Specifies the managed object domain that the query results will be added to.
-
+ 
  *
  * @param (NSString*)domain the domain value as a string, e.g. "network-objects"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)domain:(NSString*)domain;
+- (nonnull SRKQuery*)domain:(nonnull NSString*)domain;
 /**
  * Used to include "joined" data within the query string, you must use the tablename.columnname syntax within a where statement
-
+ 
  *
  * @param (Class)joinTo the class you would like to pwrform a SQL JOIN with
  * @param (NSString*)leftParameter the property name that you would like to use within the local object to match against the target
  * @param (NSString*)targetParameter the property within the class you wish to join with that will be matched with the left parameter.
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (SRKQuery*)joinTo:(Class)joinClass leftParameter:(NSString*)leftParameter targetParameter:(NSString*)targetParameter;
+- (nonnull SRKQuery*)joinTo:(nonnull Class)joinClass leftParameter:(nonnull NSString*)leftParameter targetParameter:(nonnull NSString*)targetParameter;
 
 /* execution methods */
 /**
  * Performs the query and returns the results, you will always get an object back even if there are no results.
-
+ 
  *
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKResultSet*)fetch;
+- (nonnull SRKResultSet*)fetch;
 /**
  * Performs the query and returns the first match found form the query.
  *
  * @return (SRKObject*) results of the query.
  */
-- (SRKObject* _Nullable)first;
+- (nullable SRKObject*)first;
 /**
  * Performs the query and returns the results, you will always get an object back even if there are no results.  All the objects will be deflated lightweight objects, who's values will only be retrieved upon accessing the properties.  If configured, the object can "hang on" to the object to stop repeat queries, but the objects will then use more memory.
-
+ 
  *
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKResultSet*)fetchLightweight;
+- (nonnull SRKResultSet*)fetchLightweight;
 /**
  * Performs the query and returns the results, you will always get an object back even if there are no results.  All the objects will be deflated lightweight objects, who's values will only be retrieved upon accessing the properties.  If configured, the object can "hang on" to the object to stop repeat queries, but the objects will then use more memory.
-
+ 
  * @param prefetchProperties:(NSArray*) the properties you would like to retieve with the fetch.
  *
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKResultSet*)fetchLightweightPrefetchingProperties:(NSArray*)properties;
+- (nonnull SRKResultSet*)fetchLightweightPrefetchingProperties:(nonnull NSArray*)properties;
 /**
  * Performs the query as an async operation and returns a handler object. The results are then passed into the supplied SRKQueryAsyncResponse block.
-
+ 
  *
  * @return (SRKQueryAsyncHandler*) an async query handler to allow the cancellation of the fetch request.
  */
-- (SRKQueryAsyncHandler*)fetchAsync:(SRKQueryAsyncResponse)_responseBlock;
+- (nonnull SRKQueryAsyncHandler*)fetchAsync:(nonnull SRKQueryAsyncResponse)_responseBlock;
 /**
  * Performs the query as an async operation and returns a handler object. The results are then passed into the supplied SRKQueryAsyncResponse block.
-
+ 
  * @param onMainThread: specify weather you want to execute the results block on the main thread.
  *
  * @return (SRKQueryAsyncHandler*) an async query handler to allow the cancellation of the fetch request.
  */
-- (SRKQueryAsyncHandler *)fetchAsync:(SRKQueryAsyncResponse)_responseBlock onMainThread:(BOOL)onMainThread;
+- (nonnull SRKQueryAsyncHandler *)fetchAsync:(nonnull SRKQueryAsyncResponse)_responseBlock onMainThread:(BOOL)onMainThread;
 /**
  * Performs the query and returns only the primary keys (Id parameter).  This is often much quicker if the fully hydrated objects are not required.
-
+ 
  *
  * @return (NSArray*) primary keys of the query.
  */
 /**
  * Performs the query and returns the results, you will always get an object back even if there are no results.  All the objects will be deflated lightweight objects, who's values will only be retrieved upon accessing the properties.  If configured, the object can "hang on" to the object to stop repeat queries, but the objects will then use more memory.
-
+ 
  *
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKQueryAsyncHandler*)fetchLightweightAsync:(SRKQueryAsyncResponse)_responseBlock onMainThread:(BOOL)onMainThread;
+- (nonnull SRKQueryAsyncHandler*)fetchLightweightAsync:(nonnull SRKQueryAsyncResponse)_responseBlock onMainThread:(BOOL)onMainThread;
 /**
  * Performs the query and returns the results, you will always get an object back even if there are no results.  All the objects will be deflated lightweight objects, who's values will only be retrieved upon accessing the properties.  If configured, the object can "hang on" to the object to stop repeat queries, but the objects will then use more memory.
-
+ 
  * @param prefetchProperties:(NSArray*) the properties you would like to retieve with the fetch.
  *
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKQueryAsyncHandler*)fetchLightweightPrefetchingPropertiesAsync:(NSArray*)properties withAsyncBlock:(SRKQueryAsyncResponse)_responseBlock onMainThread:(BOOL)onMainThread;
+- (nonnull SRKQueryAsyncHandler*)fetchLightweightPrefetchingPropertiesAsync:(nonnull NSArray*)properties withAsyncBlock:(nonnull SRKQueryAsyncResponse)_responseBlock onMainThread:(BOOL)onMainThread;
 /**
  * Performs the query as an async operation and returns a handler object. The results are then passed into the supplied SRKQueryAsyncResponse block.
-
  *
  * @return (SRKQueryAsyncHandler*) an async query handler to allow the cancellation of the fetch request.
  */
-- (NSArray*)ids;
+- (nonnull NSArray*)ids;
 /**
  * Performs the query and returns the results all within the same SRKContext, you will always get an object back even if there are no results.
-
  *
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKResultSet*)fetchWithContext;
+- (nonnull SRKResultSet*)fetchWithContext;
 /**
  * Performs the query and returns the results all within the SRKContext specified in the context parameter, you will always get an object back even if there are no results.
-
  * @param (SRKContext*)context specifies the context that all the results should be added to.
  * @return (SRKResultSet*) results of the query.  Always returns an object and never returns nil.
  */
-- (SRKResultSet*)fetchIntoContext:(SRKContext*)context;
+- (nonnull SRKResultSet*)fetchIntoContext:(nonnull SRKContext*)context;
 /**
  * Performs the query and returns the results grouped by the specified property, you will always get an object back even if there are no results.
-
+ 
  * @param (NSString*)propertyName the property name to group by
  * @return (NSDictionary*) results of the query, the key values are the distinct values of the paramater that was specified.
  */
-- (NSDictionary*)groupBy:(NSString*)propertyName;
+- (nonnull NSDictionary*)groupBy:(nonnull NSString*)propertyName;
 /**
  * Performs the query and returns the count of the rows within the results.
  *
@@ -991,14 +985,14 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @param (NSString*)propertyName the property name to select the distict values of
  * @return (NSArray*) results of the query, the key values are the distinct values of the paramater that was specified.
  */
-- (NSArray*)distinct:(NSString*)propertyName;
+- (nonnull NSArray<id>*)distinct:(nonnull NSString*)propertyName;
 
 /**
  * Performs the query and returns the sum of the numeric property that is specified in the parameter.
  * @param (NSString*)propertyName the property name to perform the SUM aggregation function on.
  * @return (double)  sum of the specified parameter across all results.
  */
-- (double)sumOf:(NSString*)propertyName;
+- (double)sumOf:(nonnull NSString*)propertyName;
 
 @end
 
@@ -1009,8 +1003,8 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  */
 @interface SRKRawResults : NSObject
 
-@property (nonatomic) NSMutableArray* rawResults;
-@property (nonatomic) SRKError* error;
+@property (nonatomic, nonnull) NSMutableArray* rawResults;
+@property (nonatomic, nullable) SRKError* error;
 
 /**
  * Contains the number if rows in the result set from a raw query
@@ -1031,14 +1025,14 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @param (NSInteger)index. The row index for the result to retrieve.
  * @return (id), this is the value contained in the column.  This can be, NSString, NSDate, NSNumber, NSNull.
  */
-- (id)valueForColumn:(NSString*)columnName atRow:(NSInteger)index;
+- (nullable id)valueForColumn:(nonnull NSString*)columnName atRow:(NSInteger)index;
 /**
  * Retrieves a column from the dataset, given the index.
  *
  * @param (NSInteger)index. The index for the column name to retrieve.
  * @return (NSString*), the column name to be used in queries.
  */
-- (NSString*)columnNameForIndex:(NSInteger)index;
+- (nullable NSString*)columnNameForIndex:(NSInteger)index;
 
 @end
 
@@ -1049,7 +1043,7 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  */
 @interface SRKIndexProperty : NSObject
 
-@property (strong) NSString*   name;
+@property (strong, nullable) NSString*   name;
 @property enum SRKIndexSortOrder order;
 
 /**
@@ -1057,14 +1051,14 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  *
  * @return (NSString) the string representation of the sort order
  */
--(NSString*) getSortOrderString;
+-(nonnull NSString*) getSortOrderString;
 
 /**
  * Formats the object's SRKIndexSortOrder into the string representation necessary for naming indices
  *
  * @return (NSString) the string representation of the sort order
  */
--(NSString*) getSortOrderIndexName;
+-(nonnull NSString*) getSortOrderIndexName;
 
 /**
  * Initializes a new SRKIndexProperty object
@@ -1073,7 +1067,7 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @param (enum SRKIndexSortOrder)sortOrder The direction in which the index should sort
  * @return (id)
  */
--(id) initWithName:(NSString*)columnName andOrder:(enum SRKIndexSortOrder) sortOrder;
+-(nonnull instancetype) initWithName:(nonnull NSString*)columnName andOrder:(enum SRKIndexSortOrder) sortOrder;
 
 /**
  * Initializes a new SRKIndexProperty object with a default sort order of Ascending
@@ -1081,54 +1075,84 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* results);
  * @param (NSString*)columnName The named column used within the index
  * @return (id)
  */
--(id) initWithName:(NSString*)columnName;
+-(nonnull instancetype) initWithName:(nonnull NSString*)columnName;
 
 @end
 
 #define SHARKSYNC_DEFAULT_GROUP @"__default__"
 
 @interface SRKSyncObject : SRKStringObject
-    
-- (BOOL)commitInGroup:(NSString*)group;
-    
+
+- (BOOL)commitInGroup:(nullable NSString*)group;
+
 @end
 
 @protocol SharkSyncDelegate <NSObject>
-    
-    @required
-    
-    @end
+
+@required
+
+@end
 
 @class SharkSyncSettings;
 
+/**
+ *  SharkSync.io is a service from the developers of SharkORM which provides a codeless data synchronisation platoform for mobile devices.
+ */
 @interface SharkSync : NSObject
-    
-    @property (strong) SharkSyncSettings* settings;
-    @property (strong) NSString* applicationKey;
-    @property (strong) NSString* accountKeyKey;
-    @property (strong) NSString* deviceId;
-    
-+ (instancetype)sharedObject;
-+ (void)initServiceWithApplicationId:(NSString*)application_key apiKey:(NSString*)account_key;
-+ (void)setSyncSettings:(SharkSyncSettings*) settings;
-+ (void)startSynchronisation;
-+ (void)stopSynchronisation;
-+ (void)synchroniseNow;
-   
-    // group management
-+ (void)addVisibilityGroup:(NSString*)visibilityGroup;
-+ (void)removeVisibilityGroup:(NSString*)visibilityGroup;
-    
-    @end
 
-typedef NSData*(^SharkSyncEncryptionBlock)(NSData* dataToEncrypt);
-typedef NSData*(^SharkSyncDecryptionBlock)(NSData* dataToDecrypt);
+/** Starts the service with the provided application and access keys which are generated on the SharkSync.io customer portal.  Once the service is started, data will automatically start synchronising between the appliaction and the service.  The application will "subscribe" to certain visibility groups, and data written into that group (in any table) will automatically be distributed to other installations which have also subscribed to the same visibility group.
+ *  @param appId, this is the identifier supplied by the admin portal e.g. 9a720b2f-d4e7-4d37-b773-a03a257458ca
+ *  @param accessKey, this is the current access key for the application.  e.g. c03e7cc9-a4b5-4d63-9dd9-00e68edbe4c8
+ */
++ (void)startServiceWithApplicationId:(nonnull NSString *)appId accessKey:(nonnull NSString *)accessKey settings:(nullable SharkSyncSettings*)settings classes:(nullable NSArray<Class>*)classList;
+/** Supplies the settings to the service.  Most importantly the encryption blocks and keys.
+ *  @param settings, a SharkSyncSettings* object populated with encrypt/decrupt blocks and a key (if required).
+ */
++ (void)setSyncSettings:(nonnull SharkSyncSettings*)settings;
+/** Stops the network calls to pause the framework
+ */
++ (void)stopSynchronisation;
+/** Synchronises the data with the server and blocks until complete.  Best called on a background thread
+ */
++ (void)synchroniseNow;
+
+// group management
+/** Adds a new visibility group into the registry.  That group will then be synchronised with the service from that moment on.
+ *  @param visibilityGroup, the visibility group that is to be added to the device.
+ */
++ (void)addVisibilityGroup:(nonnull NSString*)visibilityGroup;
+/** Removes a visibility group from the device. Note:  All records belonging to that group will be removed from the device.
+ *  @param visibilityGroup, the visibility group that is to be removed from the device.
+ */
++ (void)removeVisibilityGroup:(nonnull NSString*)visibilityGroup;
+
+@end
+
+typedef NSData* _Nullable(^SharkSyncEncryptionBlock)(NSData* _Nonnull dataToEncrypt);
+typedef NSData* _Nullable(^SharkSyncDecryptionBlock)(NSData* _Nonnull dataToDecrypt);
 
 @interface SharkSyncSettings : NSObject
 
-@property (copy)    SharkSyncEncryptionBlock encryptBlock;
-@property (copy)    SharkSyncDecryptionBlock decryptBlock;
-@property (strong)  NSString* aes256EncryptionKey;
+/** Specifies a block to be used to encrypt the data before transmission to the service, accepts data and returns encrypted data.  The default block if one is not specified is an AES256 implementation which uses the aes256EncryptionKey property as a key.
+ */
+@property (copy, nullable)    SharkSyncEncryptionBlock encryptBlock;
+/** Specifies a block to be used to decrypt the data received from the service, accepts data and returns decrypted data.  The default block if one is not specified is an AES256 implementation which uses the aes256EncryptionKey property as a key.
+ */
+@property (copy, nullable)    SharkSyncDecryptionBlock decryptBlock;
+/** The encryption key used to encrypt/decrypt data using the default AES256 algo utilised by the framework.
+ */
+@property (strong, nullable)  NSString* aes256EncryptionKey;
+
+/** The service endpoint if self hosting.
+ */
+@property (strong, nullable)  NSString* serviceUrl;
+
+/** The interval at which to poll for group changes.
+ */
+@property int pollInterval;
+
+/** When true, if a record is committed into a group to which the device is not subscribed the device will automatically register for that new group.
+ */
 @property BOOL      autoSubscribeToGroupsWhenCommiting;
 
 @end

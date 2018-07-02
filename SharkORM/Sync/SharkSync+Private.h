@@ -43,12 +43,19 @@ typedef enum : NSUInteger {
 
 @interface SharkSync ()
 
-+ (NSString*)MD5FromString:(NSString*)inVar;
-+ (NSString*)getEffectiveRecordGroup;
-+ (void)setEffectiveRecorGroup:(NSString*)group;
+@property (strong, nullable) NSMutableDictionary* concurrentRecordGroups;
+@property (strong, nullable) SharkSyncSettings* settings;
+@property (strong, nullable) NSString* applicationKey;
+@property (strong, nullable) NSString* accountKeyKey;
+@property (strong, nullable) NSString* deviceId;
+
++ (nonnull NSString*)MD5FromString:(nonnull NSString*)inVar;
++ (nonnull NSString*)getEffectiveRecordGroup;
++ (void)setEffectiveRecorGroup:(nonnull NSString*)group;
 + (void)clearEffectiveRecordGroup;
-+ (id)decryptValue:(NSString*)value;
-+ (void)queueObject:(SRKEntity *)object withChanges:(NSMutableDictionary*)changes withOperation:(SharkSyncOperation)operation inHashedGroup:(NSString*)group;
++ (nullable id)decryptValue:(nonnull NSString*)value;
++ (void)queueObject:(nonnull SRKEntity *)object withChanges:(nullable NSMutableDictionary*)changes withOperation:(SharkSyncOperation)operation inHashedGroup:(nonnull NSString*)group;
++ (nonnull instancetype)sharedObject;
 
 @end
 

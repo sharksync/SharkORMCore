@@ -29,7 +29,7 @@ import Foundation
     @objc public dynamic var last_polled: NSNumber?
 
     @objc public class func groupWithEncodedName(_ name: String) -> SRKSyncGroup? {
-        return SRKSyncGroup.query().where("groupName = %@", parameters: [name]).limit(1).first() as? SRKSyncGroup
+        return SRKSyncGroup.query().where("groupName = ?", parameters: [name]).limit(1).first() as? SRKSyncGroup
     }
     
 }

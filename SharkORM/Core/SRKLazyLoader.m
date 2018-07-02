@@ -54,9 +54,8 @@
 		NSObject* primaryKey = [linked getField:entityNameInSourceObject];
 		
 		if (primaryKey) {
-			
-			SRKEntity* o = [[self.relationship.targetClass alloc] initWithPrimaryKeyValue:primaryKey];
-			return o.exists ? o : nil;
+
+            return [self.relationship.targetClass objectWithPrimaryKeyValue:primaryKey];
 			
 		} else {
 			

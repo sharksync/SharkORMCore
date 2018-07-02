@@ -58,7 +58,7 @@ static NSMutableDictionary* entitiesThatNeedRefactoring;
 static int obCount=0;
 
 
-- (NSDictionary *)joinedResults {
+- (NSDictionary<NSString *,id> *)joinedResults {
     return [NSDictionary dictionaryWithDictionary:_joinedData];
 }
 
@@ -1553,7 +1553,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
     
 }
 
-- (id)initWithPrimaryKeyValue:(NSObject*)priKeyValue {
+- (id)initWithPrimaryKeyValue:(id)priKeyValue {
     
     Class originalClass = ((SRKEntity*)self).class;
     

@@ -11,9 +11,8 @@
 		3A21760420E233670063B0B1 /* libSharkORM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A71E50020DCF65800554A4F /* libSharkORM.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		3A21762620E248870063B0B1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A21762520E248870063B0B1 /* Info.plist */; };
 		3A21769720E3DE8C0063B0B1 /* SharkORMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A21769620E3DE8C0063B0B1 /* SharkORMTests.swift */; };
-		3A21769920E3DE8C0063B0B1 /* SharkORM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2175F520E230A20063B0B1 /* SharkORM.framework */; };
 		3A2176A020E3EF6B0063B0B1 /* DataObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A21769F20E3EF6B0063B0B1 /* DataObjects.swift */; };
-		3A2176A620E3F2A50063B0B1 /* SchemaTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2176A520E3F2A50063B0B1 /* SchemaTest.swift */; };
+		3A2714EE20E86342008DE398 /* SharkORM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A2175F520E230A20063B0B1 /* SharkORM.framework */; };
 		3A71E62620DCF87D00554A4F /* SharkORM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B820DCF87C00554A4F /* SharkORM.m */; };
 		3A71E62720DCF87D00554A4F /* SRKLazyLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5B920DCF87C00554A4F /* SRKLazyLoader.m */; };
 		3A71E62820DCF87D00554A4F /* SharkSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E5BA20DCF87C00554A4F /* SharkSchemaManager.swift */; };
@@ -53,14 +52,12 @@
 		3A71E64D20DCF87D00554A4F /* SRKSyncObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E60D20DCF87D00554A4F /* SRKSyncObject.m */; };
 		3A71E64E20DCF87D00554A4F /* SyncComms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E60E20DCF87D00554A4F /* SyncComms.swift */; };
 		3A71E64F20DCF87D00554A4F /* SRKDeferredChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E60F20DCF87D00554A4F /* SRKDeferredChange.m */; };
-		3A71E65020DCF87D00554A4F /* SRKSharkSyncAccountSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61120DCF87D00554A4F /* SRKSharkSyncAccountSettings.m */; };
 		3A71E65120DCF87D00554A4F /* SRKSyncOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61220DCF87D00554A4F /* SRKSyncOptions.m */; };
 		3A71E65220DCF87D00554A4F /* SyncNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61420DCF87D00554A4F /* SyncNetwork.swift */; };
 		3A71E65320DCF87D00554A4F /* SRKSyncNodesList.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61520DCF87D00554A4F /* SRKSyncNodesList.m */; };
 		3A71E65420DCF87D00554A4F /* Mutex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61620DCF87D00554A4F /* Mutex.swift */; };
 		3A71E65520DCF87D00554A4F /* SyncRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61720DCF87D00554A4F /* SyncRequest.swift */; };
 		3A71E65620DCF87D00554A4F /* SyncInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61920DCF87D00554A4F /* SyncInterface.swift */; };
-		3A71E65720DCF87D00554A4F /* SRKSyncAuthObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61A20DCF87D00554A4F /* SRKSyncAuthObject.m */; };
 		3A71E65820DCF87D00554A4F /* SRKSyncRegisteredClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61B20DCF87D00554A4F /* SRKSyncRegisteredClass.m */; };
 		3A71E65920DCF87D00554A4F /* SharkSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61C20DCF87D00554A4F /* SharkSync.m */; };
 		3A71E65A20DCF87D00554A4F /* SharkSyncChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61E20DCF87D00554A4F /* SharkSyncChange.swift */; };
@@ -76,7 +73,7 @@
 			remoteGlobalIDString = 3A71E4FF20DCF65800554A4F;
 			remoteInfo = SharkORM;
 		};
-		3A21769A20E3DE8C0063B0B1 /* PBXContainerItemProxy */ = {
+		3A2714EC20E8632D008DE398 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A71E4F820DCF65800554A4F /* Project object */;
 			proxyType = 1;
@@ -107,7 +104,6 @@
 		3A21769620E3DE8C0063B0B1 /* SharkORMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharkORMTests.swift; sourceTree = "<group>"; };
 		3A21769820E3DE8C0063B0B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A21769F20E3EF6B0063B0B1 /* DataObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataObjects.swift; sourceTree = "<group>"; };
-		3A2176A520E3F2A50063B0B1 /* SchemaTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaTest.swift; sourceTree = "<group>"; };
 		3A71E50020DCF65800554A4F /* libSharkORM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSharkORM.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A71E5B620DCF87C00554A4F /* BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		3A71E5B820DCF87C00554A4F /* SharkORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkORM.m; sourceTree = "<group>"; };
@@ -183,7 +179,6 @@
 		3A71E60E20DCF87D00554A4F /* SyncComms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncComms.swift; sourceTree = "<group>"; };
 		3A71E60F20DCF87D00554A4F /* SRKDeferredChange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKDeferredChange.m; sourceTree = "<group>"; };
 		3A71E61020DCF87D00554A4F /* SRKDefunctObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKDefunctObject.h; sourceTree = "<group>"; };
-		3A71E61120DCF87D00554A4F /* SRKSharkSyncAccountSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKSharkSyncAccountSettings.m; sourceTree = "<group>"; };
 		3A71E61220DCF87D00554A4F /* SRKSyncOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKSyncOptions.m; sourceTree = "<group>"; };
 		3A71E61420DCF87D00554A4F /* SyncNetwork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncNetwork.swift; sourceTree = "<group>"; };
 		3A71E61520DCF87D00554A4F /* SRKSyncNodesList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKSyncNodesList.m; sourceTree = "<group>"; };
@@ -191,16 +186,13 @@
 		3A71E61720DCF87D00554A4F /* SyncRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncRequest.swift; sourceTree = "<group>"; };
 		3A71E61820DCF87D00554A4F /* SRKSyncNodesList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKSyncNodesList.h; sourceTree = "<group>"; };
 		3A71E61920DCF87D00554A4F /* SyncInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncInterface.swift; sourceTree = "<group>"; };
-		3A71E61A20DCF87D00554A4F /* SRKSyncAuthObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKSyncAuthObject.m; sourceTree = "<group>"; };
 		3A71E61B20DCF87D00554A4F /* SRKSyncRegisteredClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKSyncRegisteredClass.m; sourceTree = "<group>"; };
 		3A71E61C20DCF87D00554A4F /* SharkSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharkSync.m; sourceTree = "<group>"; };
 		3A71E61D20DCF87D00554A4F /* SRKDeferredChange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKDeferredChange.h; sourceTree = "<group>"; };
 		3A71E61E20DCF87D00554A4F /* SharkSyncChange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharkSyncChange.swift; sourceTree = "<group>"; };
-		3A71E61F20DCF87D00554A4F /* SRKSharkSyncAccountSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKSharkSyncAccountSettings.h; sourceTree = "<group>"; };
 		3A71E62020DCF87D00554A4F /* SRKSyncOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKSyncOptions.h; sourceTree = "<group>"; };
 		3A71E62120DCF87D00554A4F /* SRKDefunctObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKDefunctObject.m; sourceTree = "<group>"; };
 		3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharkSyncGroup.swift; sourceTree = "<group>"; };
-		3A71E62320DCF87D00554A4F /* SRKSyncAuthObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRKSyncAuthObject.h; sourceTree = "<group>"; };
 		3A71E62420DCF87D00554A4F /* SRKSyncObject+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRKSyncObject+Private.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,7 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A21769920E3DE8C0063B0B1 /* SharkORM.framework in Frameworks */,
+				3A2714EE20E86342008DE398 /* SharkORM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +236,6 @@
 				3A21769620E3DE8C0063B0B1 /* SharkORMTests.swift */,
 				3A21769820E3DE8C0063B0B1 /* Info.plist */,
 				3A21769F20E3EF6B0063B0B1 /* DataObjects.swift */,
-				3A2176A520E3F2A50063B0B1 /* SchemaTest.swift */,
 			);
 			path = SharkORMTests;
 			sourceTree = "<group>";
@@ -416,26 +407,22 @@
 		3A71E60A20DCF87D00554A4F /* Sync */ = {
 			isa = PBXGroup;
 			children = (
+				3A71E61320DCF87D00554A4F /* Comms */,
+				3A71E61C20DCF87D00554A4F /* SharkSync.m */,
 				3A71E60B20DCF87D00554A4F /* SharkSync+Private.h */,
-				3A71E60C20DCF87D00554A4F /* SRKSyncRegisteredClass.h */,
-				3A71E60D20DCF87D00554A4F /* SRKSyncObject.m */,
-				3A71E60E20DCF87D00554A4F /* SyncComms.swift */,
+				3A71E61E20DCF87D00554A4F /* SharkSyncChange.swift */,
+				3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */,
+				3A71E61D20DCF87D00554A4F /* SRKDeferredChange.h */,
 				3A71E60F20DCF87D00554A4F /* SRKDeferredChange.m */,
 				3A71E61020DCF87D00554A4F /* SRKDefunctObject.h */,
-				3A71E61120DCF87D00554A4F /* SRKSharkSyncAccountSettings.m */,
-				3A71E61220DCF87D00554A4F /* SRKSyncOptions.m */,
-				3A71E61320DCF87D00554A4F /* Comms */,
-				3A71E61A20DCF87D00554A4F /* SRKSyncAuthObject.m */,
-				3A71E61B20DCF87D00554A4F /* SRKSyncRegisteredClass.m */,
-				3A71E61C20DCF87D00554A4F /* SharkSync.m */,
-				3A71E61D20DCF87D00554A4F /* SRKDeferredChange.h */,
-				3A71E61E20DCF87D00554A4F /* SharkSyncChange.swift */,
-				3A71E61F20DCF87D00554A4F /* SRKSharkSyncAccountSettings.h */,
-				3A71E62020DCF87D00554A4F /* SRKSyncOptions.h */,
 				3A71E62120DCF87D00554A4F /* SRKDefunctObject.m */,
-				3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */,
-				3A71E62320DCF87D00554A4F /* SRKSyncAuthObject.h */,
+				3A71E60D20DCF87D00554A4F /* SRKSyncObject.m */,
 				3A71E62420DCF87D00554A4F /* SRKSyncObject+Private.h */,
+				3A71E62020DCF87D00554A4F /* SRKSyncOptions.h */,
+				3A71E61220DCF87D00554A4F /* SRKSyncOptions.m */,
+				3A71E60C20DCF87D00554A4F /* SRKSyncRegisteredClass.h */,
+				3A71E61B20DCF87D00554A4F /* SRKSyncRegisteredClass.m */,
+				3A71E60E20DCF87D00554A4F /* SyncComms.swift */,
 			);
 			path = Sync;
 			sourceTree = "<group>";
@@ -497,7 +484,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				3A21769B20E3DE8C0063B0B1 /* PBXTargetDependency */,
+				3A2714ED20E8632D008DE398 /* PBXTargetDependency */,
 			);
 			name = SharkORMTests;
 			productName = SharkORMTests;
@@ -593,7 +580,6 @@
 			files = (
 				3A2176A020E3EF6B0063B0B1 /* DataObjects.swift in Sources */,
 				3A21769720E3DE8C0063B0B1 /* SharkORMTests.swift in Sources */,
-				3A2176A620E3F2A50063B0B1 /* SchemaTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,7 +601,6 @@
 				3A71E63920DCF87D00554A4F /* SRKRawResults.m in Sources */,
 				3A71E65520DCF87D00554A4F /* SyncRequest.swift in Sources */,
 				3A71E65A20DCF87D00554A4F /* SharkSyncChange.swift in Sources */,
-				3A71E65020DCF87D00554A4F /* SRKSharkSyncAccountSettings.m in Sources */,
 				3A71E63C20DCF87D00554A4F /* SRKStringObject.m in Sources */,
 				3A71E65C20DCF87D00554A4F /* SharkSyncGroup.swift in Sources */,
 				3A71E65320DCF87D00554A4F /* SRKSyncNodesList.m in Sources */,
@@ -641,7 +626,6 @@
 				3A71E65B20DCF87D00554A4F /* SRKDefunctObject.m in Sources */,
 				3A71E64E20DCF87D00554A4F /* SyncComms.swift in Sources */,
 				3A71E63420DCF87D00554A4F /* SRKContext.m in Sources */,
-				3A71E65720DCF87D00554A4F /* SRKSyncAuthObject.m in Sources */,
 				3A71E65820DCF87D00554A4F /* SRKSyncRegisteredClass.m in Sources */,
 				3A71E64320DCF87D00554A4F /* SRKCompoundIndex.m in Sources */,
 				3A71E64420DCF87D00554A4F /* SRKIndexProperty.m in Sources */,
@@ -664,10 +648,10 @@
 			target = 3A71E4FF20DCF65800554A4F /* libSharkORM */;
 			targetProxy = 3A21760020E2318D0063B0B1 /* PBXContainerItemProxy */;
 		};
-		3A21769B20E3DE8C0063B0B1 /* PBXTargetDependency */ = {
+		3A2714ED20E8632D008DE398 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3A2175F420E230A20063B0B1 /* SharkORM */;
-			targetProxy = 3A21769A20E3DE8C0063B0B1 /* PBXContainerItemProxy */;
+			targetProxy = 3A2714EC20E8632D008DE398 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -833,6 +817,7 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				STRIP_SWIFT_SYMBOLS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TVOS_DEPLOYMENT_TARGET = 11.0;
 				WATCHOS_DEPLOYMENT_TARGET = 3.0;
