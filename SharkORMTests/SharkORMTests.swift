@@ -874,10 +874,12 @@ class SharkORMTests: XCTestCase, SRKDelegate {
 
     func test_basic_data_syncronisation_with_sharksyncIO() {
         
-        SharkSync.startService(withApplicationId: "9a720b2e-d4e7-4d37-b773-a03a257458ca", accessKey: "b03e7cc9-a4b5-4d63-9dd9-00e68edbe4c8")
+        let settings = SharkSyncSettings()
+        settings.pollInterval = 1;
+        SharkSync.startService(withApplicationId: "9a720b2e-d4e7-4d37-b773-a03a257458ca", accessKey: "b03e7cc9-a4b5-4d63-9dd9-00e68edbe4c8", settings: settings, classes: [TestTable.self])
         SharkSync.addVisibilityGroup("testgroup")
-//        let t = TestTable(dictionary: ["name" : "adrian", "age" : 39])
-//        t.commit(inGroup: "testgroup")
+        let t = TestTable(dictionary: ["name" : "adrian", "age" : 39])
+        t.commit(inGroup: "testgroup")
         SharkSync.synchroniseNow()
         Thread.sleep(forTimeInterval: 10)
 

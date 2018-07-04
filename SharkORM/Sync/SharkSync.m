@@ -24,7 +24,7 @@
 #import "SRKEntity+Private.h"
 #import "SRKDefunctObject.h"
 #import "SRKSyncOptions.h"
-#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCrypto.h>
 #import "SRKAES256Extension.h"
 #import "SharkORM-Swift.h"
 #import "SRKSyncRegisteredClass.h"
@@ -62,6 +62,8 @@ typedef NSImage XXImage;
     if (!settings) {
         sync.settings = [SharkSyncSettings new];
     }
+    
+    [self startSynchronisation];
     
 }
 
@@ -113,7 +115,7 @@ typedef NSImage XXImage;
     if (![[[[SRKSyncGroup query] where:@"groupName = ?" parameters:@[[self MD5FromString:visibilityGroup]]] limit:1] count]) {
         SRKSyncGroup* newGroup = [SRKSyncGroup new];
         newGroup.groupName = [self MD5FromString:visibilityGroup];
-        newGroup.tidemark_uuid = @"";
+        newGroup.tidemark = 0;
         [newGroup commit];
     }
     
@@ -151,101 +153,98 @@ typedef NSImage XXImage;
 
 + (id)decryptValue:(NSString*)value {
     
-    // the problem with base64 is that it can contain "/" chars!
     if (!value) {
         return nil;
     }
-    if (![value containsString:@"/"]) {
-        return nil;
-    }
     
-    NSRange r = [value rangeOfString:@"/"];
-    NSString* type = [value substringToIndex:r.location];
-    NSString* data = [value substringFromIndex:r.location+1];
-    
-    NSData* dValue = [[NSData alloc] initWithBase64EncodedString:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData* dValue = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
     
     // call the block in the sync settings to encrypt the data
     SharkSync* sync = [SharkSync sharedObject];
     SharkSyncSettings* settings = sync.settings;
     
-    dValue = settings.decryptBlock(dValue);
+    // get the first byte and check which style of encryption is being used
+    uint8_t type = 0;
+    [dValue getBytes:&type length:1];
+    NSData* encryptedData = [dValue subdataWithRange:NSMakeRange(1, dValue.length-1)];
+    NSData* decrypteddata = nil;
     
-    
-    if ([type isEqualToString:@"text"]) {
+    if (type == SharkSyncEncryptionTypeAES256v1) {
         
-        // turn the data back to a string
-        NSString* sValue = [[NSString alloc] initWithData:dValue encoding:NSUnicodeStringEncoding];
-        
-        return sValue;
-        
-    } else if ([type isEqualToString:@"number"]) {
-        
-        // turn the data back to a string
-        NSString* sValue = [[NSString alloc] initWithData:dValue encoding:NSUnicodeStringEncoding];
-        
-        // now turn the sValue back to it's original value
-        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-        f.numberStyle = NSNumberFormatterDecimalStyle;
-        return [f numberFromString:sValue];
-        
-    } else if ([type isEqualToString:@"date"]) {
-        
-        // turn the data back to a string
-        NSString* sValue = [[NSString alloc] initWithData:dValue encoding:NSUnicodeStringEncoding];
-        
-        // now turn the sValue back to it's original value
-        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-        f.numberStyle = NSNumberFormatterDecimalStyle;
-        return [NSDate dateWithTimeIntervalSince1970:[f numberFromString:sValue].doubleValue];
-        
-    } else if ([type isEqualToString:@"bytes"]) {
-        
-        return dValue;
-        
-    } else if ([type isEqualToString:@"image"]) {
-        
-        // turn the data back to an image
-        return [UIImage imageWithData:dValue];
-        
-    } else if ([type isEqualToString:@"mdictionary"] || [type isEqualToString:@"dictionary"] || [type isEqualToString:@"marray"] || [type isEqualToString:@"array"]) {
-        
-        NSError* error;
-        
-        if ([type isEqualToString:@"mdictionary"]) {
-            
-            return [NSMutableDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:dValue options:NSJSONReadingMutableLeaves error:&error]];
-            
-        } else if ([type isEqualToString:@"dictionary"]) {
-            
-            return [NSDictionary dictionaryWithDictionary:[NSJSONSerialization JSONObjectWithData:dValue options:NSJSONReadingMutableLeaves error:&error]];
-            
-        } else if ([type isEqualToString:@"array"]) {
-            
-            return [NSArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:dValue options:NSJSONReadingMutableLeaves error:&error]];
-            
-        } else if ([type isEqualToString:@"marray"]) {
-            
-            return [NSMutableArray arrayWithArray:[NSJSONSerialization JSONObjectWithData:dValue options:NSJSONReadingMutableLeaves error:&error]];
-            
+        decrypteddata = [SharkSync SRKAES256DecryptWithKey:settings.aes256EncryptionKey data:encryptedData];
+        if (!decrypteddata) {
+            return nil;
         }
         
+    } else if (type == SharkSyncEncryptionTypeUser) {
+        if (settings.decryptBlock) {
+            // this is a custom encryption
+            decrypteddata = settings.decryptBlock(encryptedData);
+            if (!decrypteddata) {
+                return nil;
+            }
+        } else {
+            return nil;
+        }
+    }
+    
+    if (decrypteddata.length < 2) {
+        return nil;
+    }
+    
+    uint8_t dataType = 0;
+    [decrypteddata getBytes:&dataType length:1];
+    decrypteddata = [decrypteddata subdataWithRange:NSMakeRange(2, decrypteddata.length-2)];
+    
+    if (dataType == SharkSyncPropertyTypeText) {
         
-    }  else if ([type isEqualToString:@"entity"]) {
+        return [[NSString alloc] initWithData:decrypteddata encoding:NSUnicodeStringEncoding];
         
-        NSData* dValue = [[NSData alloc] initWithBase64EncodedData:[NSData dataWithBytes:data.UTF8String length:data.length] options:0];
+    } else if (dataType == SharkSyncPropertyTypeNumber) {
         
-        // call the block in the sync settings to encrypt the data
-        SharkSync* sync = [SharkSync sharedObject];
-        SharkSyncSettings* settings = sync.settings;
+        double d = 0;
+        [decrypteddata getBytes:&d length:sizeof(double)];
+        return @(d);
         
-        dValue = settings.decryptBlock(dValue);
+    } else if (dataType == SharkSyncPropertyTypeImage) {
         
-        // turn the data back to a string
-        NSString* sValue = [[NSString alloc] initWithData:dValue encoding:NSUnicodeStringEncoding];
+        return [UIImage imageWithData:decrypteddata];
         
-        // now turn the sValue back to it's original value
-        return sValue;
+    } else if (dataType == SharkSyncPropertyTypeDate) {
+        
+        double d = 0;
+        [decrypteddata getBytes:&d length:sizeof(double)];
+        return [NSDate dateWithTimeIntervalSince1970:d];
+        
+    } else if (dataType == SharkSyncPropertyTypeArray || dataType == SharkSyncPropertyTypeMutableArray || dataType == SharkSyncPropertyTypeDictionary || dataType == SharkSyncPropertyTypeMutableDictionary) {
+        
+        id object = [NSJSONSerialization JSONObjectWithData:decrypteddata options:NSJSONReadingMutableLeaves error:nil];
+        if (!object) {
+            return nil;
+        }
+        if (dataType == SharkSyncPropertyTypeArray) {
+            return [NSArray arrayWithArray:object];
+        } else if (dataType == SharkSyncPropertyTypeMutableArray) {
+            return [NSMutableArray arrayWithArray:object];
+        } else if (dataType == SharkSyncPropertyTypeDictionary) {
+            return [NSDictionary dictionaryWithDictionary:object];
+        } else if (dataType == SharkSyncPropertyTypeMutableDictionary) {
+            return [NSMutableDictionary dictionaryWithDictionary:object];
+        }
+        
+    } else if (dataType == SharkSyncPropertyTypeNull) {
+        
+        return [NSNull new];
+        
+    } else if (dataType == SharkSyncPropertyTypeEntityString) {
+        
+        return [[NSString alloc] initWithData:decrypteddata encoding:NSUnicodeStringEncoding];
+        
+    } else if (dataType == SharkSyncPropertyTypeEntityNumeric) {
+        
+        double d = 0;
+        [decrypteddata getBytes:&d length:sizeof(double)];
+        return @(d);
         
     }
     
@@ -273,185 +272,149 @@ typedef NSImage XXImage;
                  to be encrypted however the developer wants, using any method */
                 
                 id value = [changes objectForKey:property];
-                NSString* type = nil;
+                SharkSyncPropertyType type = SharkSyncPropertyTypeNull;
+                NSMutableData* dValue = [NSMutableData new];
+                
+                // insert a random byte into the value to mix up the encryption
+                srand(@([NSDate date].timeIntervalSince1970).intValue);
                 
                 if (value) {
+                    
                     if ([value isKindOfClass:[NSString class]]) {
-                        
-                        type = @"text";
-                        
-                        NSData* dValue = [((NSString*)value) dataUsingEncoding: NSUnicodeStringEncoding];
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
-                        
-                    } else if ([value isKindOfClass:[NSNumber class]]) {
-                        
-                        type = @"number";
-                        NSData* dValue = [[NSString stringWithFormat:@"%@", value] dataUsingEncoding: NSUnicodeStringEncoding];
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
-                        
-                    } else if ([value isKindOfClass:[NSDate class]]) {
-                        
-                        type = @"date";
-                        
-                        NSData* dValue = [[NSString stringWithFormat:@"%@", @(((NSDate*)value).timeIntervalSince1970)] dataUsingEncoding: NSUnicodeStringEncoding];
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
-                        
-                    } else if ([value isKindOfClass:[NSData class]]) {
-                        
-                        type = @"bytes";
-                        
-                        NSData* dValue = (NSData*)value;
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
-                        
-                    } else if ([value isKindOfClass:[XXImage class]]) {
-                        
-                        type = @"image";
-                        
-                        NSData* dValue = UIImageJPEGRepresentation(((XXImage*)value), 0.6);
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
-                        
-                    } else if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSMutableArray class]] || [value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSMutableDictionary class]]) {
+                        type = SharkSyncPropertyTypeText;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        [dValue appendData:[((NSString*)value) dataUsingEncoding: NSUnicodeStringEncoding allowLossyConversion:NO]];
+                    }
+                    else if ([value isKindOfClass:[NSNumber class]]) {
+                        type = SharkSyncPropertyTypeNumber;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        double v = ((NSNumber*)value).doubleValue;
+                        [dValue appendBytes:&v length:sizeof(double)];
+                    }
+                    else if ([value isKindOfClass:[NSDate class]]) {
+                        type = SharkSyncPropertyTypeDate;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        double v = ((NSDate*)value).timeIntervalSince1970;
+                        [dValue appendBytes:&v length:sizeof(double)];
+                    }
+                    else if ([value isKindOfClass:[NSData class]]) {
+                        type = SharkSyncPropertyTypeBytes;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        [dValue appendData:((NSData*)value)];
+                    }
+                    else if ([value isKindOfClass:[XXImage class]]) {
+                        type = SharkSyncPropertyTypeImage;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        [dValue appendData:UIImageJPEGRepresentation(((XXImage*)value), 0.7)];
+                    }
+                    else if ([value isKindOfClass:[UIImage class]]) {
+                        type = SharkSyncPropertyTypeImage;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        [dValue appendData:UIImageJPEGRepresentation(((UIImage*)value), 0.7)];
+                    }
+                    else if ([value isKindOfClass:[NSNull class]]) {
+                        type = SharkSyncPropertyTypeNull;
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                    }
+                    else if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSMutableArray class]] || [value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSMutableDictionary class]]) {
                         
                         if ([value isKindOfClass:[NSMutableDictionary class]]) {
-                            type = @"mdictionary";
+                            type = SharkSyncPropertyTypeMutableDictionary;
                         } else if ([value isKindOfClass:[NSMutableArray class]]) {
-                            type = @"marray";
+                            type = SharkSyncPropertyTypeMutableArray;
                         } else if ([value isKindOfClass:[NSDictionary class]]) {
-                            type = @"dictionary";
+                            type = SharkSyncPropertyTypeDictionary;
                         } else if ([value isKindOfClass:[NSArray class]]) {
-                            type = @"array";
+                            type = SharkSyncPropertyTypeArray;
                         }
                         
+                        [dValue appendBytes:&type length:sizeof(uint8_t)];
+                        uint8_t r = (char)rand()%256;
+                        [dValue appendBytes:&r length:sizeof(uint8_t)];
+                        
                         NSError* error;
-                        NSData* dValue = [NSJSONSerialization dataWithJSONObject:value options:NSJSONWritingPrettyPrinted error:&error];
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
+                        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:value options:NSJSONWritingPrettyPrinted error:&error];
+                        if (jsonData) {
+                            [dValue appendData:jsonData];
+                        }
                         
                     } else if ([value isKindOfClass:[SRKEntity class]]) {
                         
-                        type = @"entity";
-                        
-                        NSData* dValue = [[NSString stringWithFormat:@"%@", ((SRKSyncObject*)value).Id] dataUsingEncoding: NSUnicodeStringEncoding];
-                        
-                        // call the block in the sync settings to encrypt the data
-                        SharkSync* sync = [SharkSync sharedObject];
-                        SharkSyncSettings* settings = sync.settings;
-                        
-                        dValue = settings.encryptBlock(dValue);
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        NSString* b64Value = [dValue base64EncodedStringWithOptions:0];
-                        change.value = [NSString stringWithFormat:@"%@/%@",type,b64Value];
-                        [change commit];
-                        
-                    } else if ([value isKindOfClass:[NSNull class]]) {
-                        
-                        SharkSyncChange* change = [SharkSyncChange new];
-                        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], property];
-                        change.action = operation;
-                        change.recordGroup = group;
-                        change.timestamp = [[NSDate date] timeIntervalSince1970];
-                        change.value = nil;
-                        [change commit];
+                       id pk = ((SRKObject*)value).Id;
+                        if ([pk isKindOfClass:[NSString class]]) {
+                            type = SharkSyncPropertyTypeEntityString;
+                            [dValue appendBytes:&type length:sizeof(uint8_t)];
+                            uint8_t r = (char)rand()%256;
+                            [dValue appendBytes:&r length:sizeof(uint8_t)];
+                            [dValue appendData:[((NSString*)pk) dataUsingEncoding: NSUTF8StringEncoding allowLossyConversion:NO]];
+                        } else if ([pk isKindOfClass:[NSNumber class]]) {
+                            type = SharkSyncPropertyTypeEntityNumeric;
+                            [dValue appendBytes:&type length:sizeof(uint8_t)];
+                            uint8_t r = (char)rand()%256;
+                            [dValue appendBytes:&r length:sizeof(uint8_t)];
+                            u_int64_t v = ((NSNumber*)value).unsignedLongLongValue;
+                            [dValue appendBytes:&v length:sizeof(u_int64_t)];
+                        }
                         
                     }
                     
+                    // now encrypt and package the data
+                    // call the block in the sync settings to encrypt the data
+                    SharkSync* sync = [SharkSync sharedObject];
+                    SharkSyncSettings* settings = sync.settings;
+                    
+                    NSData* encryptedData = nil;
+                    SharkSyncEncryptionType encryptType = SharkSyncEncryptionTypeAES256v1;
+                    if (settings.encryptBlock) {
+                        
+                        encryptType = SharkSyncEncryptionTypeUser;
+                        encryptedData = settings.encryptBlock(dValue);
+                        
+                    } else {
+                        
+                        encryptedData = [SharkSync SRKAES256EncryptWithKey:settings.aes256EncryptionKey data:dValue];
+                        
+                    }
+                    
+                    dValue = [NSMutableData new];
+                    [dValue appendBytes:&type length:sizeof(SharkSyncEncryptionType)];
+                    [dValue appendData:encryptedData];
+                    
+                    SharkSyncChange* change = [SharkSyncChange new];
+                    change.recordId = object.Id;
+                    change.entity = [[object class] description];
+                    change.property = property;
+                    change.action = operation;
+                    change.recordGroup = group;
+                    change.timestamp = [[NSDate date] timeIntervalSince1970];
+                    change.value = [dValue base64EncodedStringWithOptions:0];
+                    [change commit];
+                    
                 }
-                
+
             }
             
         }
     } else if (operation == SharkSyncOperationDelete) {
         
         SharkSyncChange* change = [SharkSyncChange new];
-        change.path = [NSString stringWithFormat:@"%@/%@/%@", object.Id, [[object class] description], @"__delete__"];
+        change.entity = [[object class] description];
+        change.property = @"__delete__";
+        change.recordId = object.Id;
         change.action = operation;
         change.recordGroup = group;
         change.timestamp = [[NSDate date] timeIntervalSince1970];
@@ -459,40 +422,6 @@ typedef NSImage XXImage;
         
     }
     
-}
-
-@end
-
-#import <CommonCrypto/CommonCrypto.h>
-
-@implementation SharkSyncSettings
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        
-        // these are just defaults to ensure all data is encrypted, it is reccommended that you develop your own or at least set your own aes256EncryptionKey value.
-        
-        self.autoSubscribeToGroupsWhenCommiting = YES;
-        self.aes256EncryptionKey = [SharkSync sharedObject].applicationKey;
-        self.encryptBlock = ^NSData*(NSData* dataToEncrypt) {
-            
-            SharkSync* sync = [SharkSync sharedObject];
-            SharkSyncSettings* settings = sync.settings;
-            
-            return [SharkSyncSettings SRKAES256EncryptWithKey:settings.aes256EncryptionKey data:dataToEncrypt];
-            
-        };
-        self.decryptBlock = ^NSData*(NSData* dataToDecrypt) {
-            
-            SharkSync* sync = [SharkSync sharedObject];
-            SharkSyncSettings* settings = sync.settings;
-            
-            return [SharkSyncSettings SRKAES256DecryptWithKey:settings.aes256EncryptionKey data:dataToDecrypt];
-            
-        };
-    }
-    return self;
 }
 
 + (NSData *)SRKAES256EncryptWithKey:(NSString *)key data:(NSData*)data {
@@ -562,6 +491,29 @@ typedef NSImage XXImage;
     free(buffer); //free the buffer;
     return nil;
     
+}
+
+@end
+
+#import <CommonCrypto/CommonCrypto.h>
+
+@implementation SharkSyncSettings
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        
+        // these are just defaults to ensure all data is encrypted, it is reccommended that you develop your own or at least set your own aes256EncryptionKey value.
+        
+        self.autoSubscribeToGroupsWhenCommiting = YES;
+        self.aes256EncryptionKey = [SharkSync sharedObject].applicationKey;
+        self.encryptBlock = nil;
+        self.decryptBlock = nil;
+        self.pollInterval = 60;
+        self.serviceUrl = @"http://api.testingallthethings.net/Api/Sync";
+        
+    }
+    return self;
 }
 
 @end

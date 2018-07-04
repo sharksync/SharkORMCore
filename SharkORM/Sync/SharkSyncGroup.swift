@@ -25,7 +25,7 @@ import Foundation
 @objc public class SRKSyncGroup : SRKObject {
     
     @objc public dynamic var groupName: String?
-    @objc public dynamic var tidemark_uuid: String?
+    @objc public dynamic var tidemark: Int64 = 0
     @objc public dynamic var last_polled: NSNumber?
 
     @objc public class func groupWithEncodedName(_ name: String) -> SRKSyncGroup? {

@@ -25,7 +25,7 @@ import Foundation
 public class SyncComms {
     
     func selectEndpoint() -> URL {
-        return URL(string:"http://api.testingallthethings.net/Api/Sync")!
+        return URL(string:SharkSync.sharedObject().settings.serviceUrl)!
     }
     
     func request(payload: SyncRequestViewModel) -> SyncResponseViewModel {
@@ -40,14 +40,22 @@ public class SyncComms {
         let session = URLSession.shared
         let (data, response, error) = session.synchronousDataTask(with: request)
         if error != nil || response == nil || response?.statusCode != 200 || data == nil {
-            return SyncResponseViewModel()
+            let r = SyncResponseViewModel()
+            if data != nil {
+                
+            }
+            r.Success = false
+            return r
         }
         
         // convert the body back to an object
         do {
             return try JSONDecoder().decode(SyncResponseViewModel.self, from: data!)
         } catch let error {
-            return SyncResponseViewModel()
+            let r = SyncResponseViewModel()
+            r.Success = false
+            r.Errors = ["\(error)"]
+            return r
         }
     }
     

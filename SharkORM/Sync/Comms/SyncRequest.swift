@@ -25,7 +25,7 @@ import Foundation
 class SyncResponseViewModel : Codable {
     
     var Groups: [SyncObjectGroupResponseViewModel] = []
-    var Errors: String?
+    var Errors: [String] = []
     var Success: Bool?
     
 }
@@ -41,15 +41,17 @@ class SyncObjectGroupResponseViewModel : Codable {
 class SyncObjectGroupViewModel : Codable {
     
     var Group: String?
-    var Tidemark: String?
+    var Tidemark: Int64?
     
 }
 
 class SyncObjectChangeViewModel : Codable {
     
-    var Path: String?
+    var RecordId: String?
+    var Entity: String?
+    var Property: String?
     var Value: String?
-    var SecondsAgo: Double?
+    var SecondsAgo: Int64?
     var Group: String?
     var Operation: Int?
     var Modified: String?
@@ -83,10 +85,12 @@ class SyncRequest {
         
         for change: SharkSyncChange in changeResults {
             
-            let secondsAgo = Date().timeIntervalSince1970 - change.timestamp
+            let secondsAgo = Int64((Date().timeIntervalSince1970 - change.timestamp) * 1000)
             let c = SyncObjectChangeViewModel()
             c.Group = change.recordGroup
-            c.Path = change.path
+            c.Entity = change.entity
+            c.RecordId = change.recordId
+            c.Property = change.property
             c.SecondsAgo = secondsAgo
             c.Value = change.value
             r.changes.append(c)
@@ -98,7 +102,7 @@ class SyncRequest {
         for group: SRKSyncGroup in groupResults {
             let g = SyncObjectGroupViewModel()
             g.Group = group.groupName
-            g.Tidemark = group.tidemark_uuid
+            g.Tidemark = group.tidemark
             r.groups.append(g)
         }
         
@@ -124,11 +128,10 @@ class SyncRequest {
             
             for change in group.Changes {
                 
-                let path = (change.Path ?? "//").components(separatedBy: "/")
                 let value = change.Value ?? ""
-                let record_id = path[0]
-                let class_name = path[1]
-                let property = path[2]
+                let record_id = change.RecordId!
+                let class_name = change.Entity!
+                let property = change.Property!
                 
                 // process this change
                 if property.contains("__delete__") {
@@ -148,7 +151,6 @@ class SyncRequest {
                     
                     // existing object, uopdate the value
                     var decryptedValue = SharkSync.decryptValue(value)
-                    
                     let targetObject = SRKSyncObject.object(fromClass: class_name, withPrimaryKey: record_id) as? SRKSyncObject
                     if targetObject != nil {
                         
@@ -220,7 +222,7 @@ class SyncRequest {
             // now update the group tidemark so as to not receive this data again
             let grp = SRKSyncGroup.groupWithEncodedName(group.Group!)
             if grp != nil {
-                grp!.tidemark_uuid = "\(group.Tidemark)"
+                grp!.tidemark = group.Tidemark ?? 0
                 grp!.last_polled = NSNumber(value: Date().timeIntervalSince1970)
                 grp!.commit()
             }

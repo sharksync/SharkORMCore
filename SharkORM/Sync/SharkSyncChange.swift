@@ -24,7 +24,9 @@ import Foundation
 
 @objc public class SharkSyncChange : SRKObject {
     
-    @objc public dynamic var path: String?
+    @objc public dynamic var recordId: String?
+    @objc public dynamic var property: String?
+    @objc public dynamic var entity: String?
     @objc public dynamic var timestamp: Double = 0
     @objc public dynamic var value: String?
     @objc public dynamic var action: Int = 0

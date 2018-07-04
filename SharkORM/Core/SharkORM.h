@@ -1141,11 +1141,11 @@ typedef NSData* _Nullable(^SharkSyncDecryptionBlock)(NSData* _Nonnull dataToDecr
 @property (copy, nullable)    SharkSyncDecryptionBlock decryptBlock;
 /** The encryption key used to encrypt/decrypt data using the default AES256 algo utilised by the framework.
  */
-@property (strong, nullable)  NSString* aes256EncryptionKey;
+@property (strong, nonnull)  NSString* aes256EncryptionKey;
 
 /** The service endpoint if self hosting.
  */
-@property (strong, nullable)  NSString* serviceUrl;
+@property (strong, nonnull)  NSString* serviceUrl;
 
 /** The interval at which to poll for group changes.
  */
