@@ -1,6 +1,6 @@
 Shark Changelog
 ===============
-## v2.2.x - Jun 28, 2018
+## v{BUILD} - {DATE}
 
 After a year of attempting to port the entire product into Swift 3 then 4 then 4.1, we have come to the conclusion that at this precise time it is just not possible.  Instead we have decided to make the interraction between the two languages as smooth and as nice as possible.  So we have strongly typed all methods and properties wherever possible and added extra functionality to data objects to allow a smoother code flow.  It is a shame we wasted over a year, but it became apparrent that the "little bugs" were just escalating out of control and there were far too many compromises that would have resulted in a significantly different product, that was not as fluid to use.
 
@@ -17,6 +17,15 @@ return SRKIndexDefinition(["name","age"])
 + (change) added `clone` to create a new object with all of the property values copied across
 + (change) added `asDictionary` method to export an object as a dictionary to make interfacing with network calls far easier.
 
+## SharkSync.io
+
+SharkSync.io is the new codeless data synchroinisation platform from the SharkORM team.  The design principal behind the service is to require minimal effort from developers, removing the complication of delivering an online/offline experience whilst minimising data collisions.  With a flexible security/visbility model allowing the partitioning of data on a record by record basis across all tables.  Which makes for a flexible and unique way to specify which clients have access to which data.
+
+All data is encrypted and decrypted on the device, we have zero access to the data at any point.  Developers can use our standard AES256 implementation and specify their own key.  Or they can override the encryption functions and use anything they choose instead.
+
+To get started, create an account at SharkSync.io and get your initial block of free credits (1MM Tokens to get you started).   This is not a profit seeking service, and token cost and expenditure is matched to the cost of providing the service using AWSs', highly scalable, infrastructure.
+
+The service is also Open Source, so you are welcome to self host.  But as the cost is the same it becomes a political choice at that point.  Also, in the spirit of being entirely fair you are able to download all of your data from our service and import it into a self hosted setup and simply point your application at a different endpoint.
 
 ## v2.1.3 - Mar 31, 2017
 
