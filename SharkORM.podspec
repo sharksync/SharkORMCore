@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     s.ios.deployment_target = "9.0"
     #s.osx.deployment_target = "10.8"
     #s.tvos.deployment_target = "10.0"
-s.source            = { :http => 'http://example.com/sdk/{VER}/SharkORM_Framework_v{VER}.zip' }
+s.source            = { :http => 'https://github.com/sharksync/SharkORMCore/releases/download/v{VER}/SharkORM_Framework_v{VER}.zip' }
 
     s.ios.deployment_target = '9.0'
     s.ios.vendored_frameworks = 'SharkORM.framework'
