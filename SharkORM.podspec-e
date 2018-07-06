@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name              = 'SharkORM'
-    s.version           = '2.3.37'
+    s.version           = '{VER}'
     s.summary           = 'SQLite based ORM for iOS, tvOS & macOS'
     s.homepage          = 'http://sharkorm.com/'
 
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     s.ios.deployment_target = "9.0"
     #s.osx.deployment_target = "10.8"
     #s.tvos.deployment_target = "10.0"
-s.source            = { :http => 'http://example.com/sdk/2.3.37/SharkORM_Framework_v2.3.37.zip' }
+s.source            = { :http => 'http://example.com/sdk/{VER}/SharkORM_Framework_v{VER}.zip' }
 
     s.ios.deployment_target = '9.0'
     s.ios.vendored_frameworks = 'SharkORM.framework'
