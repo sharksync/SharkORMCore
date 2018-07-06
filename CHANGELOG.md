@@ -2,24 +2,24 @@ Shark Changelog
 ===============
 ## v{BUILD} - {DATE}
 
-After a year of attempting to port the entire product into Swift 3 then 4 then 4.1, we have come to the conclusion that at this precise time it is just not possible.  Instead we have decided to make the interraction between the two languages as smooth and as nice as possible.  So we have strongly typed all methods and properties wherever possible and added extra functionality to data objects to allow a smoother code flow.  It is a shame we wasted over a year, but it became apparrent that the "little bugs" were just escalating out of control and there were far too many compromises that would have resulted in a significantly different product, that was not as fluid to use.
+After a year of attempting to port the entire product into Swift 3 then 4 then 4.1, we have come to the conclusion that at this precise time it is just not possible.  Instead we have decided to make the interaction between the two languages as smooth and as nice as possible.  So we have strongly typed all methods and properties wherever possible and added extra functionality to data objects to allow a smoother code flow.  It is a shame we wasted over a year, but it became apparent that the "little bugs" were just escalating out of control and there were far too many compromises that would have resulted in a significantly different product, that was not as fluid to use.
 
 + (change) Added 'settings' property on SharkORM to allow developers to directly change the settings without having to implement the delegate method and return a settings object.
 + (change) Made SRKIndexDefinition methods return the object again, allowing nested property creation all on a single line.  Example:
 ```Swift
 return SRKIndexDefinition().add("name", order: SRKIndexSortOrderAscending).add("age", order: SRKIndexSortOrderDescending)
 ```
-+ (change) Added a convenience `init` to SRKIndexDefinition to allow you to just create an index with the proeprties you want and return it.  Example:
++ (change) Added a convenience `init` to SRKIndexDefinition to allow you to just create an index with the properties you want and return it.  Example:
 ```Swift
 return SRKIndexDefinition(["name","age"])
 ```
-+ (change) Imporoved interface to queries. Added `first` method to allow you to get only the first object in the result set.
++ (change) Improved interface to queries. Added `first` method to allow you to get only the first object in the result set.
 + (change) added `clone` to create a new object with all of the property values copied across
 + (change) added `asDictionary` method to export an object as a dictionary to make interfacing with network calls far easier.
 
 ## SharkSync.io
 
-SharkSync.io is the new codeless data synchroinisation platform from the SharkORM team.  The design principal behind the service is to require minimal effort from developers, removing the complication of delivering an online/offline experience whilst minimising data collisions.  With a flexible security/visbility model allowing the partitioning of data on a record by record basis across all tables.  Which makes for a flexible and unique way to specify which clients have access to which data.
+SharkSync.io is the new code-less data synchronisation platform from the SharkORM team.  The design principal behind the service is to require minimal effort from developers, removing the complication of delivering an online/offline experience whilst minimising data collisions.  With a flexible security/visibility model allowing the partitioning of data on a record by record basis across all tables.  Which makes for a flexible and unique way to specify which clients have access to which data.
 
 All data is encrypted and decrypted on the device, we have zero access to the data at any point.  Developers can use our standard AES256 implementation and specify their own key.  Or they can override the encryption functions and use anything they choose instead.
 
