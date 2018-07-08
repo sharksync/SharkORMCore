@@ -63,6 +63,7 @@
 		3A71E65A20DCF87D00554A4F /* SharkSyncChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E61E20DCF87D00554A4F /* SharkSyncChange.swift */; };
 		3A71E65B20DCF87D00554A4F /* SRKDefunctObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E62120DCF87D00554A4F /* SRKDefunctObject.m */; };
 		3A71E65C20DCF87D00554A4F /* SharkSyncGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */; };
+		3AB935A220F2435B00048FCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB935A120F2435B00048FCD /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,6 +195,7 @@
 		3A71E62120DCF87D00554A4F /* SRKDefunctObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRKDefunctObject.m; sourceTree = "<group>"; };
 		3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharkSyncGroup.swift; sourceTree = "<group>"; };
 		3A71E62420DCF87D00554A4F /* SRKSyncObject+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SRKSyncObject+Private.h"; sourceTree = "<group>"; };
+		3AB935A120F2435B00048FCD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AB935A220F2435B00048FCD /* Foundation.framework in Frameworks */,
 				3A21760420E233670063B0B1 /* libSharkORM.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,6 +229,7 @@
 		3A2175FD20E230E30063B0B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3AB935A120F2435B00048FCD /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
