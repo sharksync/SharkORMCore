@@ -64,6 +64,7 @@
 		3A71E65B20DCF87D00554A4F /* SRKDefunctObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E62120DCF87D00554A4F /* SRKDefunctObject.m */; };
 		3A71E65C20DCF87D00554A4F /* SharkSyncGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71E62220DCF87D00554A4F /* SharkSyncGroup.swift */; };
 		3AB935A220F2435B00048FCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB935A120F2435B00048FCD /* Foundation.framework */; };
+		3AB935A320F2466200048FCD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB935A120F2435B00048FCD /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AB935A320F2466200048FCD /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
