@@ -500,7 +500,7 @@ typedef void(^SRKCommitOptionsBlock)(void);
  * @param (NSObject*)priKeyValue The primary key value to look up an existing object
  * @return SRKObject* Either an existing or new class.
  */
-- (nonnull instancetype)initWithPrimaryKeyValue:(nonnull id)priKeyValue DEPRECATED_MSG_ATTRIBUTE("use 'objectWithPrimaryKeyValue:' instead");
+- (nonnull instancetype)initWithPrimaryKeyValue:(nonnull id)priKeyValue; //DEPRECATED_MSG_ATTRIBUTE("use 'objectWithPrimaryKeyValue:' instead");
 /**
  * Returns an object that matches the primary key value specified, if there is no match, nil is returned.
  
@@ -806,7 +806,7 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* _Nonnull results);
  * @param (NSString*)where contains the parameters for the query, e.g. where:@" forename = %@ ", @"Adrian"
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (nonnull SRKQuery*)whereWithFormat:(nonnull NSString*)format,... DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
+- (nonnull SRKQuery*)whereWithFormat:(nonnull NSString*)format,... ;// DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
 /**
  * Specifies the WHERE clause of the query statement, using a standard format string.
  
@@ -815,7 +815,7 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* _Nonnull results);
  * @param (NSArray*)params is an array of parameters to be placed into the format string, useful for constructing queries through a logic path.
  * @return (SRKQuery*) this value can be discarded or used to nest queries together to form clear and concise statements.
  */
-- (nonnull SRKQuery*)whereWithFormat:(nonnull NSString*)format withParameters:(nonnull NSArray*)params DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
+- (nonnull SRKQuery*)whereWithFormat:(nonnull NSString*)format withParameters:(nonnull NSArray*)params; // DEPRECATED_MSG_ATTRIBUTE("use 'where:parameters:' instead, and you must now use '?' instead of '%@' for place markers");
 /**
  * Specifies the WHERE clause of the query statement, and the parameters to be bound to the statement.
  *
@@ -1094,6 +1094,9 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* _Nonnull results);
 @end
 
 @class SharkSyncSettings;
+@class SharkSyncChanges;
+
+typedef void(^SharkSyncChangesReceived)(SharkSyncChanges* _Nonnull changes, NSError* _Nullable error);
 
 /**
  *  SharkSync.io is a service from the developers of SharkORM which provides a codeless data synchronisation platoform for mobile devices.
@@ -1101,30 +1104,30 @@ typedef void(^SRKQueryAsyncResponse)(SRKResultSet* _Nonnull results);
 @interface SharkSync : NSObject
 
 /** Starts the service with the provided application and access keys which are generated on the SharkSync.io customer portal.  Once the service is started, data will automatically start synchronising between the appliaction and the service.  The application will "subscribe" to certain visibility groups, and data written into that group (in any table) will automatically be distributed to other installations which have also subscribed to the same visibility group.
- *  @param appId, this is the identifier supplied by the admin portal e.g. 9a720b2f-d4e7-4d37-b773-a03a257458ca
- *  @param accessKey, this is the current access key for the application.  e.g. c03e7cc9-a4b5-4d63-9dd9-00e68edbe4c8
  */
-+ (void)startServiceWithApplicationId:(nonnull NSString *)appId accessKey:(nonnull NSString *)accessKey settings:(nullable SharkSyncSettings*)settings classes:(nullable NSArray<Class>*)classList;
-/** Supplies the settings to the service.  Most importantly the encryption blocks and keys.
- *  @param settings, a SharkSyncSettings* object populated with encrypt/decrupt blocks and a key (if required).
- */
-+ (void)setSyncSettings:(nonnull SharkSyncSettings*)settings;
++ (nullable NSError*)startService;
 /** Stops the network calls to pause the framework
  */
 + (void)stopSynchronisation;
-/** Synchronises the data with the server and blocks until complete.  Best called on a background thread
+/** Provides access to the settings class, so you can set the API keys and change default polling times etc.
  */
-+ (void)synchroniseNow;
-
++ (nonnull SharkSyncSettings*)Settings;
+/** If set, this block gets called after a successful sync operation where changes were downloaded and written to the datastore.  The block is called with the changes as a Change Object and an error if there was a prolem talking to the service.
+ */
++ (void)setChangeNotification:(SharkSyncChangesReceived)changeBlock;
 // group management
 /** Adds a new visibility group into the registry.  That group will then be synchronised with the service from that moment on.
  *  @param visibilityGroup, the visibility group that is to be added to the device.
+ *  @param frequency, the time in seconds that a group should be polled for synchronisation.  Enables tiering of frequent and infrequent data.
  */
-+ (void)addVisibilityGroup:(nonnull NSString*)visibilityGroup;
++ (void)addVisibilityGroup:(nonnull NSString*)visibilityGroup freqency:(int)frequency;
 /** Removes a visibility group from the device. Note:  All records belonging to that group will be removed from the device.
  *  @param visibilityGroup, the visibility group that is to be removed from the device.
  */
 + (void)removeVisibilityGroup:(nonnull NSString*)visibilityGroup;
+/** Lists the current Visibility Groups which are being synchronised
+ */
++ (nonnull NSArray<NSString*>*)currentVisibilityGroups;
 
 @end
 
@@ -1141,15 +1144,25 @@ typedef NSData* _Nullable(^SharkSyncDecryptionBlock)(NSData* _Nonnull dataToDecr
 @property (copy, nullable)    SharkSyncDecryptionBlock decryptBlock;
 /** The encryption key used to encrypt/decrypt data using the default AES256 algo utilised by the framework.
  */
-@property (strong, nonnull)  NSString* aes256EncryptionKey;
+@property (strong, nullable)  NSString* aes256EncryptionKey;
 
 /** The service endpoint if self hosting.
  */
 @property (strong, nonnull)  NSString* serviceUrl;
 
-/** The interval at which to poll for group changes.
+/** The interval at which to poll for group changes, for the default group & any groups with a frequency of 0.
  */
-@property int pollInterval;
+@property int defaultPollInterval;
+
+/** The application key generated by the admin console at SharkSync.io
+ */
+@property (strong, nullable) NSString* applicationKey;
+/** You account key as generated as SharkSync.io
+ */
+@property (strong, nullable) NSString* accountKey;
+/** You can specify a device identifier, useful for debugging issues with the service.
+ */
+@property (strong, nullable) NSString* deviceId;
 
 /** When true, if a record is committed into a group to which the device is not subscribed the device will automatically register for that new group.
  */

@@ -24,6 +24,7 @@
 #import "SharkORM.h"
 #import "SQLite3.h"
 #import "SRKDefinitions.h"
+#import "SharkSchemaManager.h"
 
 @interface SharkORM ()
 

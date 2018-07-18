@@ -34,7 +34,6 @@
 #import "SRKJoinObject.h"
 #import "SRKGlobals.h"
 #import "SRKTransaction+Private.h"
-#import "SharkORM-Swift.h"
 
 #define EventInsert 1
 #define EventUpdate 2
@@ -313,8 +312,8 @@ typedef enum : int {
         [SharkORM registerSystemExtensions:dbHandle];
         
         // now the database is opened, refactor it based on the current entity schema in memory
-        [SharkSchemaManager.shared schemaUpdateMissingDatabaseEntriesWithDatabase:[[SRKGlobals sharedObject] defaultDatabaseName]];
-        [SharkSchemaManager.shared refactorWithDatabase:dbName];
+        [SharkSchemaManager.shared schemaUpdateMissingDatabaseEntries:[[SRKGlobals sharedObject] defaultDatabaseName]];
+        [SharkSchemaManager.shared refactorDatabase:dbName];
         
     };
     
@@ -649,7 +648,7 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
     
     NSString* retVal = @"";
     
-    NSString* key = [SharkSchemaManager.shared schemaPrimaryKeyWithEntity:tableName];
+    NSString* key = [SharkSchemaManager.shared schemaPrimaryKeyForEntity:tableName];
     if (key) {
         retVal = key;
     }
@@ -660,7 +659,7 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
 
 +(NSInteger)primaryKeyType:(NSString*)tableName {
     
-    return [SharkSchemaManager.shared schemaPrimaryKeyTypeWithEntity:tableName];
+    return [SharkSchemaManager.shared schemaPrimaryKeyTypeForEntity:tableName];
     
 }
 
@@ -1292,7 +1291,7 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
         
         // we have the fields, now to check their types as to whether they are related objects
         Class class = query.classDecl;
-        NSInteger propertyType = [SharkSchemaManager.shared schemaPropertyTypeWithEntity:[class description] property:qFieldName];
+        NSInteger propertyType = [SharkSchemaManager.shared schemaPropertyType:[class description] property:qFieldName];
         if (propertyType == SRK_PROPERTY_TYPE_ENTITYOBJECT) {
             
             // generate the property name to look for notation
@@ -1302,7 +1301,8 @@ void stringFromDate(sqlite3_context *context, int argc, sqlite3_value **argv)
             if ([query.whereClause rangeOfString:component].location != NSNotFound || [query.orderBy rangeOfString:component].location != NSNotFound) {
                 
                 // go and get the relationship->target class for this property
-                SRKRelationship* r =  [SharkSchemaManager.shared relationshipsWithEntity:[class description] property:qFieldName];
+                NSArray<SRKRelationship *>* relationships =  [SharkSchemaManager.shared relationshipsForEntity:[class description] property:qFieldName];
+                SRKRelationship * r = relationships[0];
                 if (r) {
                     // because the user has referenced an object like "department.name = 'Development' " and not just 'department IN (select ID from Department WHERE name='Development'), we now want to automatically join the table
                     // but we need to rename the join and re-arrange the query to cope with a mixture of both object.value and traditional joins to the exact same tables.

@@ -20,17 +20,21 @@
 //    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //    SOFTWARE.
 
-import Foundation
+#import <Foundation/Foundation.h>
+#import "SharkSync+Private.h"
 
-@objc public class SharkSyncChange : SRKObject {
-    
-    @objc public dynamic var recordId: String?
-    @objc public dynamic var property: String?
-    @objc public dynamic var entity: String?
-    @objc public dynamic var timestamp: Double = 0
-    @objc public dynamic var value: String?
-    @objc public dynamic var action: Int = 0
-    @objc public dynamic var recordGroup: String?
-    @objc public dynamic var sync_op: String?
-    
-}
+@interface SyncRequestObject : NSObject
+
+@property (strong) NSArray<SharkSyncChange*>* changes;
+@property (strong) NSMutableDictionary* request;
+@property (strong) NSMutableDictionary<NSString*, NSString*>* hashes;
+
+@end
+
+@interface SyncRequest : NSObject
+
++ (SyncRequestObject *)generateSyncRequest;
++ (void)handleResponse:(NSDictionary*)response request:(SyncRequestObject*)request;
++ (void)handleError:(NSError*)error request:(SyncRequestObject*)request;
+
+@end

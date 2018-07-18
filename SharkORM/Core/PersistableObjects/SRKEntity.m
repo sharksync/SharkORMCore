@@ -38,7 +38,6 @@
 #import "SRKGlobals.h"
 #import "SRKTransaction+Private.h"
 #import "SRKCommitOptions+Private.h"
-#import "SharkORM-Swift.h"
 
 @interface SRKEntity()
 
@@ -272,13 +271,13 @@ static int obCount=0;
 
 +(void)updateEntity:(NSString*)entity property:(NSString*)propName encoding:(const char*)encoding matches:(NSString*)matches entityPropertyType:(int)entityPropertyType {
     if ([[NSString stringWithUTF8String:encoding] isEqualToString:matches]) {
-        [SharkSchemaManager.shared schemaSetWithEntity:entity property:propName type:entityPropertyType];
+        [SharkSchemaManager.shared schemaSetEntity:entity property:propName type:entityPropertyType];
     }
 }
 
 + (NSInteger)getEntityPropertyTypeFor:(NSString *)entity property:(NSString *)property {
     
-    NSInteger propertyType = [SharkSchemaManager.shared schemaPropertyTypeWithEntity:entity property:property];
+    NSInteger propertyType = [SharkSchemaManager.shared schemaPropertyType:entity property:property];
     if (propertyType) {
         return propertyType;
     } else {
@@ -295,9 +294,9 @@ static int obCount=0;
     objc_property_t primaryKeyProperty = class_getProperty([self class], SRK_DEFAULT_PRIMARY_KEY_NAME.UTF8String);
     NSString* primaryKeyPropertyDeclarationType = [NSString stringWithUTF8String:property_getAttributes(primaryKeyProperty)];
     
-    [SharkSchemaManager.shared schemaSetWithEntity:entity pk:SRK_DEFAULT_PRIMARY_KEY_NAME];
-    [SharkSchemaManager.shared schemaSetWithEntity:entity property:SRK_DEFAULT_PRIMARY_KEY_NAME type:[primaryKeyPropertyDeclarationType rangeOfString:@"NSString"].location == NSNotFound ?   SRK_PROPERTY_TYPE_NUMBER : SRK_PROPERTY_TYPE_STRING];
-    [SharkSchemaManager.shared schemaSetWithEntity:entity database:[self storageDatabaseForClass] ? [self storageDatabaseForClass] : [[SRKGlobals sharedObject] defaultDatabaseName]];
+    [SharkSchemaManager.shared schemaSetEntity:entity pk:SRK_DEFAULT_PRIMARY_KEY_NAME];
+    [SharkSchemaManager.shared schemaSetEntity:entity property:SRK_DEFAULT_PRIMARY_KEY_NAME type:[primaryKeyPropertyDeclarationType rangeOfString:@"NSString"].location == NSNotFound ?   SRK_PROPERTY_TYPE_NUMBER : SRK_PROPERTY_TYPE_STRING];
+    [SharkSchemaManager.shared schemaSetEntity:entity database:[self storageDatabaseForClass] ? [self storageDatabaseForClass] : [[SRKGlobals sharedObject] defaultDatabaseName]];
     
     Class c = [self class];
     
@@ -338,7 +337,7 @@ static int obCount=0;
             const char* typeEncoding = [attributes UTF8String];
             
             if ([declarationType rangeOfString:[NSString stringWithFormat:@"V%s", name]].location != NSNotFound) {
-                [SharkSchemaManager.shared schemaSetWithEntity:entity property:propName type:SRK_PROPERTY_TYPE_UNDEFINED];
+                [SharkSchemaManager.shared schemaSetEntity:entity property:propName type:SRK_PROPERTY_TYPE_UNDEFINED];
             }
             
             [self updateEntity:entity property:propName encoding:typeEncoding matches:@"@\"NSString\"" entityPropertyType:SRK_PROPERTY_TYPE_STRING];
@@ -363,7 +362,7 @@ static int obCount=0;
                     r.sourceClass = c;
                     r.sourceProperty = propName;
                     r.entityPropertyName = propName;
-                    [SharkSchemaManager.shared relationshipAdd:r];
+                    [SharkSchemaManager.shared addRelationship:r];
                     
                 }
             }
@@ -398,7 +397,7 @@ static int obCount=0;
             }
             if ([testClass isSubclassOfClass:[SRKEntity class]]) {
                 
-                [SharkSchemaManager.shared schemaSetWithEntity:entity property:propName type:SRK_PROPERTY_TYPE_ENTITYOBJECT];
+                [SharkSchemaManager.shared schemaSetEntity:entity property:propName type:SRK_PROPERTY_TYPE_ENTITYOBJECT];
                 
                 // now register a relationship for this object
                 
@@ -417,7 +416,7 @@ static int obCount=0;
                 r.entityPropertyName = [NSString stringWithString:propName];
                 r.relationshipType = SRK_RELATE_ONETOONE;
                 
-                [SharkSchemaManager.shared relationshipAdd:r];
+                [SharkSchemaManager.shared addRelationship:r];
                 
             }
             
@@ -537,7 +536,7 @@ static int obCount=0;
         /* we now need to convert any inbound object to the correct type as it may be a scalar target */
         if ([value isKindOfClass:[NSNumber class]]) {
             /* this is a number, now work out what the target type is */
-            switch ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:key]) {
+            switch ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:key]) {
                 case SRK_PROPERTY_TYPE_INT:
                     setPropertyIntIMP(self, [[SRKUtilities new] generateSetSelectorForPropertyName:key], ((NSNumber*)value).intValue);
                     break;
@@ -614,9 +613,9 @@ static id propertyIMP(SRKEntity* self, SEL _cmd) {
             if ([columnValue isKindOfClass:[NSData class]]) {
                 
                 /* check to see if the original column is an NSData column, if not this object needs re-inflating */
-                if([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] != SRK_PROPERTY_TYPE_DATA && [SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] != SRK_PROPERTY_TYPE_MUTABLEDATA) {
+                if([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] != SRK_PROPERTY_TYPE_DATA && [SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] != SRK_PROPERTY_TYPE_MUTABLEDATA) {
                     
-                    if ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_IMAGE) {
+                    if ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_IMAGE) {
                         
                         /* store the object so this method is only called the once */
                         [self setFieldRaw:columnName value:columnValue];
@@ -645,7 +644,7 @@ static id propertyIMP(SRKEntity* self, SEL _cmd) {
                         
                     }
                     
-                } else if ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_MUTABLEDATA) {
+                } else if ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_MUTABLEDATA) {
                     
                     columnValue = [NSMutableData dataWithData:((NSData*)columnValue)];
                     
@@ -750,7 +749,7 @@ static char propertyCharIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_CHAR)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_CHAR)) {
         return [(NSNumber*)o charValue];
     } else {
         return 0;
@@ -764,7 +763,7 @@ static int propertyIntIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_INT)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_INT)) {
         return [(NSNumber*)o intValue];
     } else {
         return 0;
@@ -778,7 +777,7 @@ static short propertyShortIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_SHORT)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_SHORT)) {
         return [(NSNumber*)o shortValue];
     } else {
         return 0;
@@ -792,7 +791,7 @@ static long propertyLongIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_LONG)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_LONG)) {
         return [(NSNumber*)o longValue];
     } else {
         return 0;
@@ -806,7 +805,7 @@ static long long propertyLongLongIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_LONGLONG)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_LONGLONG)) {
         return [(NSNumber*)o longLongValue];
     } else {
         return 0;
@@ -820,7 +819,7 @@ static unsigned char propertyUCharIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_UCHAR)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_UCHAR)) {
         return [(NSNumber*)o unsignedCharValue];
     } else {
         return 0;
@@ -834,7 +833,7 @@ static unsigned int propertyUIntIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_UINT)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_UINT)) {
         return [(NSNumber*)o unsignedIntValue];
     } else {
         return 0;
@@ -848,7 +847,7 @@ static unsigned short propertyUShortIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_USHORT)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_USHORT)) {
         return [(NSNumber*)o unsignedShortValue];
     } else {
         return 0;
@@ -862,7 +861,7 @@ static unsigned long propertyULongIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_ULONG)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_ULONG)) {
         return [(NSNumber*)o unsignedLongValue];
     } else {
         return 0;
@@ -878,7 +877,7 @@ static float propertyFloatIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_FLOAT)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_FLOAT)) {
         return [(NSNumber*)o floatValue];
     } else {
         return 0;
@@ -893,7 +892,7 @@ static unsigned long long propertyULongLongIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_ULONGLONG)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_ULONGLONG)) {
         return [(NSNumber*)o unsignedLongLongValue];
     } else {
         return 0;
@@ -907,7 +906,7 @@ static double propertyDoubleIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_DOUBLE)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_DOUBLE)) {
         return [(NSNumber*)o doubleValue];
     } else {
         return 0;
@@ -921,7 +920,7 @@ static BOOL propertyBoolIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_BOOL)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_BOOL)) {
         return [(NSNumber*)o boolValue];
     } else {
         return NO;
@@ -935,7 +934,7 @@ static char* propertyCharPTRIMP(SRKEntity* self, SEL _cmd) {
     
     NSString* columnName = NSStringFromSelector(_cmd);
     
-    if (o && ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_LONG)) {
+    if (o && ([SharkSchemaManager.shared schemaPropertyType:[self.class description] property:columnName] == SRK_PROPERTY_TYPE_LONG)) {
         return (char*)[(NSString*)o UTF8String];
     } else {
         return nil;
@@ -1001,7 +1000,7 @@ static void setPropertyIMP(SRKEntity* self, SEL _cmd, id aValue) {
     }
     
     /* now test to see if this is an asignment to or from a relationship, not a field */
-    for (SRKRelationship *r in [SharkSchemaManager.shared relationshipsWithEntity:[[self class] description]]) {
+    for (SRKRelationship *r in [SharkSchemaManager.shared relationshipsForEntity:[[self class] description]]) {
         /* now test to see if this is a linked object */
         if ([r.entityPropertyName isEqualToString:propertyName]) {
             
@@ -1089,7 +1088,7 @@ static void setPropertyEntityIMP(SRKEntity* self, SEL _cmd, id aValue) {
     }
     
     /* now test to see if this is an asignment to or from a relationship, not a field */
-    for (SRKRelationship *r in [SharkSchemaManager.shared relationshipsWithEntity:[[self class] description]]) {
+    for (SRKRelationship *r in [SharkSchemaManager.shared relationshipsForEntity:[[self class] description]]) {
         /* now test to see if this is a linked object */
         if ([r.entityPropertyName isEqualToString:propertyName]) {
             
@@ -1180,7 +1179,7 @@ static void setPropertyEntityCollectionIMP(SRKEntity* self, SEL _cmd, id aValue)
     }
     
     /* now test to see if this is an asignment to or from a relationship, not a field */
-    for (SRKRelationship *r in [SharkSchemaManager.shared relationshipsWithEntity:[[self class] description]]) {
+    for (SRKRelationship *r in [SharkSchemaManager.shared relationshipsForEntity:[[self class] description]]) {
         /* now test to see if this is a linked object */
         if ([r.entityPropertyName isEqualToString:propertyName]) {
             
@@ -1426,7 +1425,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
                 jr.sourceClass = c;
                 jr.sourceProperty = [NSString stringWithFormat:@"%@", jr.sourceProperty];
                 jr.targetProperty = SRK_DEFAULT_PRIMARY_KEY_NAME;
-                [SharkSchemaManager.shared relationshipAdd:jr];
+                [SharkSchemaManager.shared addRelationship:jr];
             }
             
             /* loop the heirarchy building the schema */
@@ -1539,11 +1538,11 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
             // generate the default Primary key index
             // now create an index for the primary key
             NSString* execSql = [NSString stringWithFormat:@"CREATE INDEX idx_%@_prikey ON %@ (Id);", strClassName, strClassName];
-            [SharkSchemaManager.shared schemaAddIndexDefinitionWithEntity:strClassName name:[NSString stringWithFormat:@"idx_%@_prikey", strClassName] definition:execSql];
+            [SharkSchemaManager.shared schemaAddIndexDefinitionForEntity:strClassName name:[NSString stringWithFormat:@"idx_%@_prikey", strClassName] definition:execSql];
             
             
             // now call the database layer to refactor if required
-            [SharkSchemaManager.shared refactorWithDatabase:[self storageDatabaseForClass] entity:[self description]];
+            [SharkSchemaManager.shared refactorDatabase:[self storageDatabaseForClass] entity:[self description]];
             
         }
         
@@ -1650,7 +1649,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
         self.registeredEventBlocks = [NSMutableArray new];
         
         /* now loop through any entity relationships there might be for this table */
-        for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsWithEntity:entityName]) {
+        for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsForEntity:entityName]) {
             
             /* this linking is for this table, bung a lazyloader into the property */
             SRKLazyLoader* ll = [[SRKLazyLoader alloc] init];
@@ -1951,7 +1950,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
 - (void)reloadRelationships {
     
     /* now loop through any entity relationships there might be for this table */
-    for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsWithEntity:[self.class description]]) {
+    for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsForEntity:[self.class description]]) {
         
         SRKLazyLoader* ll = [SRKLazyLoader new];
         ll.relationship = r;
@@ -2013,7 +2012,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
     
     // relationships
     NSMutableArray* matchingRelationships = [NSMutableArray new];
-    for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsWithEntity:[self.class description]]) {
+    for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsForEntity:[self.class description]]) {
         
         NSMutableDictionary* d = [NSMutableDictionary new];
         [d setObject:r.entityPropertyName forKey:@"property"];
@@ -2258,7 +2257,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
             
             /* check to see if this entity used a string based primary key */
             id currentId = [self Id];
-            if (!currentId && [SharkSchemaManager.shared schemaPrimaryKeyTypeWithEntity:[self.class description]] == SRK_PROPERTY_TYPE_STRING) {
+            if (!currentId && [SharkSchemaManager.shared schemaPrimaryKeyTypeForEntity:[self.class description]] == SRK_PROPERTY_TYPE_STRING) {
                 self.Id = (id)[SRKUtilities generateGUID];
             }
             
@@ -2272,7 +2271,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
                 }
             }
             
-            for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsWithEntity:[self.class description] type:SRK_RELATE_ONETOONE]) {
+            for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsForEntity:[self.class description] type:SRK_RELATE_ONETOONE]) {
                 /* this is a link field that needs to be updated */
                 NSObject* e = [self.embeddedEntities objectForKey:r.entityPropertyName];
                 if(e && [e isKindOfClass:[SRKEntity class]]) {
@@ -2287,7 +2286,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
             /* now we need to populate any fields that are based on primatives with their default values */
             for (NSString* f in self.fieldNames) {
                 
-                int type = (int)[SharkSchemaManager.shared schemaPropertyTypeWithEntity:[self.class description] property:f];
+                int type = (int)[SharkSchemaManager.shared schemaPropertyType:[self.class description] property:f];
                 if ([self.class isTypeAPrimitive:type] && ![self getField:f]) {
                     [self setFieldRaw:f value:@(0)];
                 }
@@ -2340,7 +2339,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
         
         /* check to see if this entity used a string based primary key */
         id currentId = [self Id];
-        if (!currentId && [SharkSchemaManager.shared schemaPrimaryKeyTypeWithEntity:[self.class description]] == SRK_PROPERTY_TYPE_STRING) {
+        if (!currentId && [SharkSchemaManager.shared schemaPrimaryKeyTypeForEntity:[self.class description]] == SRK_PROPERTY_TYPE_STRING) {
             self.Id = (id)[SRKUtilities generateGUID];
         }
         
@@ -2358,7 +2357,7 @@ static void setPropertyCharPTRIMP(SRKEntity* self, SEL _cmd, char* aValue) {
                 }
             }
             
-            for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsWithEntity:[self.class description] type:SRK_RELATE_ONETOONE]) {
+            for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsForEntity:[self.class description] type:SRK_RELATE_ONETOONE]) {
                 /* this is a link field that needs to be updated */
                 NSObject* e = [self.embeddedEntities objectForKey:r.entityPropertyName];
                 if(e && [e isKindOfClass:[SRKEntity class]]) {

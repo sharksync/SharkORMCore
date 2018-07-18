@@ -16,6 +16,7 @@ return SRKIndexDefinition(["name","age"])
 + (change) Improved interface to queries. Added `first` method to allow you to get only the first object in the result set.
 + (change) added `clone` to create a new object with all of the property values copied across
 + (change) added `asDictionary` method to export an object as a dictionary to make interfacing with network calls far easier.
++ (improvement) Implemented a SchemaManager class, which solves the race condition when opening up SRKObjects before the database has even been opened.  Which then means that the entities are no longer refactored.
 
 ## SharkSync.io
 

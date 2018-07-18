@@ -27,7 +27,6 @@
 #import "SRKEntity+Private.h"
 #import "SRKEntityChain.h"
 #import "SRKSyncRegisteredClass.h"
-#import "SharkORM-Swift.h"
 
 @interface SRKSyncObject ()
 
@@ -59,7 +58,6 @@
 - (BOOL)commitInGroup:(NSString*)group {
     
     // hash this group
-    group = [SharkSync MD5FromString:group];
     [SharkSync setEffectiveRecorGroup:group];
     
     if([super commit]) {
@@ -76,7 +74,7 @@
 - (BOOL)remove {
     
     if (!self.recordVisibilityGroup) {
-        [SharkSync setEffectiveRecorGroup:[SharkSync MD5FromString:SHARKSYNC_DEFAULT_GROUP]];
+        [SharkSync setEffectiveRecorGroup:SHARKSYNC_DEFAULT_GROUP];
     } else {
         [SharkSync setEffectiveRecorGroup:self.recordVisibilityGroup];
     }
@@ -144,7 +142,7 @@
             }
         }
         
-        for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsWithEntity:[self.class description] type:1]) {
+        for (SRKRelationship* r in [SharkSchemaManager.shared relationshipsForEntity:[self.class description] type:1]) {
             
             /* this is a link field that needs to be updated */
             

@@ -26,7 +26,6 @@
 #import "SRKEntity+Private.h"
 #import "SharkORM+Private.h"
 #import "SRKGlobals.h"
-#import "SharkORM-Swift.h"
 
 @implementation SRKUtilities
 
@@ -56,7 +55,7 @@
                 SRKUtilities* dba = [SRKUtilities new];
                 columnName = [dba originalColumnName:columnName];
                 
-                NSInteger type = [SharkSchemaManager.shared schemaPropertyTypeWithEntity:tableName property:columnName];
+                NSInteger type = [SharkSchemaManager.shared schemaPropertyType:tableName property:columnName];
                 if (type) {
                     if (type == SRK_PROPERTY_TYPE_DATE) {
                         value = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[((NSNumber*)value) doubleValue]];
@@ -77,7 +76,7 @@
                 SRKUtilities* dba = [SRKUtilities new];
                 columnName = [dba originalColumnName:columnName];
                 
-                NSInteger type = [SharkSchemaManager.shared schemaPropertyTypeWithEntity:tableName property:columnName];
+                NSInteger type = [SharkSchemaManager.shared schemaPropertyType:tableName property:columnName];
                 if (type) {
                     if (type == SRK_PROPERTY_TYPE_DATE) {
                         value = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[((NSNumber*)value) doubleValue]];
@@ -106,7 +105,7 @@
                 entityClass = NSClassFromString([[SRKGlobals sharedObject] getFQNameForClass:[NSString stringWithUTF8String:tableName]]);
             }
             if (entityClass) {
-                switch ([SharkSchemaManager.shared schemaPropertyTypeWithEntity:[NSString stringWithUTF8String:tableName] property:columnName]) {
+                switch ([SharkSchemaManager.shared schemaPropertyType:[NSString stringWithUTF8String:tableName] property:columnName]) {
                     case SRK_PROPERTY_TYPE_STRING:
                         // do nothing, because value is already a string.
                         break;
@@ -357,14 +356,14 @@
     [key replaceCharactersInRange:NSMakeRange(0, 1)
                        withString:[firstChar lowercaseString]];
     
-    if ([SharkSchemaManager.shared schemaPropertyExistsWithEntity:[object.class description] property:key]) {
+    if ([SharkSchemaManager.shared schemaPropertyExists:[object.class description] property:key]) {
         return key;
     }
     
     [key replaceCharactersInRange:NSMakeRange(0, 1)
                        withString:[firstChar uppercaseString]];
     
-    if ([SharkSchemaManager.shared schemaPropertyExistsWithEntity:[object.class description] property:key]) {
+    if ([SharkSchemaManager.shared schemaPropertyExists:[object.class description] property:key]) {
         return key;
     }
     

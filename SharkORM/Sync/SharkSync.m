@@ -26,8 +26,8 @@
 #import "SRKSyncOptions.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import "SRKAES256Extension.h"
-#import "SharkORM-Swift.h"
 #import "SRKSyncRegisteredClass.h"
+#import "SharkSync+Private.h"
 
 #ifdef TARGET_OS_IPHONE
 #import <UIKit/UIImage.h>
@@ -43,53 +43,53 @@ typedef NSImage XXImage;
 
 @implementation SharkSync
 
-+ (void)startServiceWithApplicationId:(NSString *)appId accessKey:(NSString *)accessKey settings:(SharkSyncSettings*)settings classes:(NSArray<Class>*)classList {
-    
-    /* get the options object */
-    SRKSyncOptions* options = [[[[SRKSyncOptions query] limit:1] fetch] firstObject];
-    if (!options) {
-        options = [SRKSyncOptions new];
-        options.device_id = [[[NSUUID UUID] UUIDString] lowercaseString];
-        [options commit];
-    }
-    
-    SharkSync* sync = [SharkSync sharedObject];
-    sync.applicationKey = appId;
-    sync.accountKeyKey = accessKey;
-    sync.deviceId = options.device_id;
-    sync.settings = settings;
-    
-    if (!settings) {
-        sync.settings = [SharkSyncSettings new];
-    }
-    
-    [self startSynchronisation];
-    
++ (SharkSyncSettings *)Settings {
+    return [SharkSync sharedObject].settings;
 }
 
-+ (void)setSyncSettings:(SharkSyncSettings*) settings {
-    [SharkSync setSyncSettings:settings];
++ (NSError *)startService {
+    
+    SharkSyncSettings* current = [SharkSync Settings];
+    if (current.applicationKey == nil) {
+        return [NSError errorWithDomain:@"sharksync.io.error" code:1 userInfo:@{@"Missing" : @"Application key has not been specified"}];
+    }
+    if (current.accountKey == nil) {
+        return [NSError errorWithDomain:@"sharksync.io.error" code:1 userInfo:@{@"Missing" : @"Account key has not been specified"}];
+    }
+    if (current.aes256EncryptionKey == nil) {
+        return [NSError errorWithDomain:@"sharksync.io.error" code:1 userInfo:@{@"Missing" : @"No encryption key specified, unable to communicate with server."}];
+    }
+    [self startSynchronisation];
+    return nil;
 }
 
 + (void)startSynchronisation {
     [SyncService StartService];
 }
 
-+ (void)synchroniseNow {
-    [SyncService SynchroniseNow];
-}
-
 + (void)stopSynchronisation {
     [SyncService StopService];
 }
 
++ (void)setChangeNotification:(SharkSyncChangesReceived)changeBlock {
+    [SharkSync sharedObject].changeBlock = changeBlock;
+}
+
 + (instancetype)sharedObject {
+    
     static id this = nil;
     if (!this) {
         this = [SharkSync new];
         ((SharkSync*)this).concurrentRecordGroups = [NSMutableDictionary new];
+        ((SharkSync*)this).settings = [SharkSyncSettings new];
+        ((SharkSync*)this).currentGroups = [NSMutableArray arrayWithArray:[[SharkSyncGroup query] fetch]];
+        if (((SharkSync*)this).currentGroups.count == 0) {
+            [SharkSync addVisibilityGroup:SHARKSYNC_DEFAULT_GROUP freqency:((SharkSync*)this).settings.defaultPollInterval];
+        }
+        ((SharkSync*)this).countOfChangesToSyncUp = [[SharkSyncChange query] count];
     }
     return this;
+    
 }
 
 + (NSString *)MD5FromString:(NSString *)inVar {
@@ -107,25 +107,48 @@ typedef NSImage XXImage;
     
 }
 
-+ (void)addVisibilityGroup:(NSString *)visibilityGroup {
++ (void)addVisibilityGroup:(NSString *)visibilityGroup freqency:(int)frequency {
     
     // adds a visibility group to the table, to be sent with all sync requests.
     // AH originally wanted the groups to be set per class, but i think it's better that a visibility group be across all classes, much good idea for the dev
-    
-    if (![[[[SRKSyncGroup query] where:@"groupName = ?" parameters:@[[self MD5FromString:visibilityGroup]]] limit:1] count]) {
-        SRKSyncGroup* newGroup = [SRKSyncGroup new];
-        newGroup.groupName = [self MD5FromString:visibilityGroup];
-        newGroup.tidemark = 0;
-        [newGroup commit];
+     @synchronized([SharkSync sharedObject].currentGroups) {
+    BOOL found = NO;
+    for (SharkSyncGroup* group in [SharkSync sharedObject].currentGroups) {
+        if ([group.name isEqualToString:visibilityGroup]) {
+            group.frequency = frequency*1000;
+            [group commit];
+        }
     }
+    if (!found) {
+        SharkSyncGroup* newGroup = [SharkSyncGroup new];
+        newGroup.name = visibilityGroup;
+        newGroup.tidemark = 0;
+        newGroup.frequency = frequency * 1000;
+        [newGroup commit];
+        [[[SharkSync sharedObject] currentGroups] addObject:newGroup];
+    }
+     }
     
+}
+
++ (NSArray<NSString *> *)currentVisibilityGroups {
+    
+     @synchronized([SharkSync sharedObject].currentGroups) {
+    return [[SharkSyncGroup query] distinct:@"name"];
+     }
 }
 
 + (void)removeVisibilityGroup:(NSString *)visibilityGroup {
     
-    NSString* vg = [self MD5FromString:visibilityGroup];
+    if ([visibilityGroup isEqualToString:SHARKSYNC_DEFAULT_GROUP]) {
+        return;
+    }
     
-    [[[[[SRKSyncGroup query] where:@"groupName = ?" parameters:@[vg]]  limit:1] fetch] remove];
+     @synchronized([SharkSync sharedObject].currentGroups) {
+    
+    NSString* vg = visibilityGroup;
+    
+    [[[[[SharkSyncGroup query] where:@"groupName = ?" parameters:@[vg]]  limit:1] fetch] remove];
     
     // now we need to remove all the records which were part of this visibility group
     for (SRKSyncRegisteredClass* c in [[SRKSyncRegisteredClass query] fetch]) {
@@ -134,7 +157,19 @@ typedef NSImage XXImage;
         [SharkORM executeSQL:sql inDatabase:nil];
     }
     
-    
+    for (SharkSyncGroup* grp in [SharkSync sharedObject].currentGroups.copy) {
+        if ([grp.name isEqualToString:visibilityGroup]) {
+            [[[SharkSync sharedObject] currentGroups] removeObject:grp];
+            break;
+        }
+    }
+     }
+}
+
++ (void)addChangesWritten:(uint64_t)changes {
+    @synchronized([SharkSync sharedObject].currentGroups) {
+        [SharkSync sharedObject].countOfChangesToSyncUp += changes;
+    }
 }
 
 + (NSString*)getEffectiveRecordGroup {
@@ -506,10 +541,10 @@ typedef NSImage XXImage;
         // these are just defaults to ensure all data is encrypted, it is reccommended that you develop your own or at least set your own aes256EncryptionKey value.
         
         self.autoSubscribeToGroupsWhenCommiting = YES;
-        self.aes256EncryptionKey = [SharkSync sharedObject].applicationKey;
+        self.aes256EncryptionKey = nil;
         self.encryptBlock = nil;
         self.decryptBlock = nil;
-        self.pollInterval = 60;
+        self.defaultPollInterval = 60;
         self.serviceUrl = @"http://api.testingallthethings.net/Api/Sync";
         
     }
